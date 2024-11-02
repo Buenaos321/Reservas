@@ -21,22 +21,18 @@ class usuarioModel
      */
     public function obtenerPorEmail($email): mixed
     {
-        try {
-            $query = "SELECT 
+        $query = "SELECT 
                 ID_USUARIO AS id,
                 NOMBRE AS nombre,
                 CORREO AS email,
                 PASSWORDHASH AS clave  
             FROM USUARIOS 
                 WHERE CORREO = :email LIMIT 1";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception(message: 'Error al obtener el usuario: ' . $e->getMessage());
-        }
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function crear($email, $clave, $nombre): mixed
@@ -68,16 +64,49 @@ class usuarioModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function actualizar($id, $email, $nombre, $clave): mixed
+    public function actualizarUsuario($id, $email = null, $nombre = null, $clave = null): bool
     {
-        $query = "UPDATE USUARIOS SET CORREO = :email, NOMBRE = :nombre ,PASSWORDHASH = :clave WHERE id = :id";
+        if (empty($email) && empty($nombre) && empty($clave)) {
+            return false;
+        }
+        // Comienza la construcción de la consulta
+        $query = "UPDATE USUARIOS SET ";
+        $params = []; // Array para almacenar los parámetros
+
+        // Agregar campos a la consulta y parámetros según corresponda
+        if (!empty($email) ) {
+            $query .= "CORREO = :email, ";
+            $params[':email'] = $email;
+        }
+        
+        if (!empty($nombre)) {
+            $query .= "NOMBRE = :nombre, ";
+            $params[':nombre'] = $nombre;
+        }
+
+        if (!empty($clave)) {
+            $query .= "PASSWORDHASH = :clave, ";
+            $params[':clave'] = $clave;
+        }
+
+        // Eliminar la última coma y espacio
+        $query = rtrim(string: $query, characters: ', ');
+        
+        // Añadir la cláusula WHERE
+        $query .= " WHERE ID_USUARIO = :id";
+        $params[':id'] = $id; // Añadir el ID al array de parámetros
+
+        // Preparar y ejecutar la consulta
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':clave', $clave);
-        return $stmt->execute();
+
+        // Asignar los parámetros
+        foreach ($params as $key => &$value) {
+            $stmt->bindParam($key, $value);
+        }
+
+        return $stmt->execute(); // Ejecuta la consulta y devuelve el resultado
     }
+
 
     public function eliminar($id): mixed
     {
@@ -86,4 +115,21 @@ class usuarioModel
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+
+    public function obtenerListadoUsuarios(): mixed
+    {
+        $query = "SELECT 
+            ID_USUARIO AS id,
+            NOMBRE AS nombre,
+            CORREO AS email,
+            PASSWORDHASH AS clave
+        FROM USUARIOS";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        
+        // Cambiar fetch a fetchAll para obtener todos los usuarios
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

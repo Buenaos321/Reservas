@@ -13,6 +13,16 @@ class UsuarioService
     public function registrarUsuario($email, $clave, $nombre): array
     {
         try {
+            $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
+
+            if ($usuario) {
+                return [
+                    'status' => 'error',
+                    'message' => 'El usuario con el correo ingresado ya se encuentra registrado en el sistema',
+                    'data' => null
+                ];
+            }
+
             $usuarioId = $this->usuarioModel->crear(email: $email, clave: $clave, nombre: $nombre);
             if ($usuarioId) {
                 return [
@@ -64,7 +74,18 @@ class UsuarioService
     public function actualizarUsuario($id, $email, $nombre, $clave): array
     {
         try {
-            $resultado = $this->usuarioModel->actualizar(id: $id, email: $email, nombre: $nombre, clave: $clave);
+            if ($email != null) {
+                $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
+                if ($usuario && $usuario['id'] != $id) {
+                    return [
+                        'status' => 'error',
+                        'message' => 'El correo al que desea cambiar ya esta siendo usado por otro usuario',
+                        'data' => null
+                    ];
+                }
+            }
+
+            $resultado = $this->usuarioModel->actualizarUsuario(id: $id, email: $email, nombre: $nombre, clave: $clave);
             if ($resultado) {
                 return [
                     'status' => 'success',
@@ -90,12 +111,21 @@ class UsuarioService
     public function eliminarUsuario($id): array
     {
         try {
+            $usuario = $this->usuarioModel->obtenerPorId(id: $id);
+            if (empty($usuario)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'El usuario que desea eliminar ya no se encuentra en el sistema',
+                    'data' => null
+                ];
+            }
+
             $resultado = $this->usuarioModel->eliminar(id: $id);
             if ($resultado) {
                 return [
                     'status' => 'success',
                     'message' => 'Usuario eliminado',
-                    'data' => null
+                    'data' => $id
                 ];
             } else {
                 return [
@@ -105,6 +135,7 @@ class UsuarioService
                 ];
             }
         } catch (Exception $e) {
+            // Aquí podrías registrar el error
             return [
                 'status' => 'error',
                 'message' => 'Error al eliminar el usuario: ' . $e->getMessage(),
@@ -112,4 +143,22 @@ class UsuarioService
             ];
         }
     }
+
+    public function obtenerListadoUsuarios(): array
+    {
+        try {
+            $listaUsuarios = $this->usuarioModel->obtenerListadoUsuarios();
+            return [
+                'status' => 'success',
+                'data' => $listaUsuarios
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Error al obtener el listado usuarios: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
 }

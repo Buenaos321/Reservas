@@ -7,6 +7,11 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\Key;
 
 class AuthMiddleware {
+    /**
+     * Verificación de token JWT usando el middleware
+     * Se encarga de verificar la validez del token proporsionado por el usuario
+     * @return stdClass
+     */
     public function verificarToken() : stdClass {
         // Obtiene los encabezados de la solicitud
         $headers = getallheaders(); // Cambiado para obtener todos los encabezados

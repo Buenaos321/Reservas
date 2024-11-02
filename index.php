@@ -21,7 +21,10 @@ if (!$dbConnection) {
 $routes = [
     'login' => 'controllers/loginController.php',
     'usuario/obtenerporid' => 'controllers/usuarioController.php',
-    'usuario/agregar'=> 'controllers/usuarioController.php',
+    'usuario/agregar' => 'controllers/usuarioController.php',
+    'usuario/modificar' => 'controllers/usuarioController.php',
+    'usuario/eliminar' => 'controllers/usuarioController.php',
+    'usuario/obtenerlista'=> 'controllers/usuarioController.php'
 ];
 
 // Obtener la ruta solicitada (ejemplo: `http://tudominio.com/index.php?route=login`)
@@ -41,31 +44,127 @@ if (array_key_exists(key: $route, array: $routes)) {
     // Instanciar el controlador y llamar al método apropiado
     switch ($route) {
         case 'login':
-            $controller = new LoginController();
-            $controller->login();
-            break;
-        case 'usuario/obtenerporid':
-            $controller = new UsuarioController();
-            $id = $_GET['id'] ?? null; // Suponiendo que el ID viene como parámetro GET
-            if ($id) {
-                $controller->obtenerPorId(id: $id);
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new LoginController();
+                $controller->login();
             } else {
                 echo json_encode(value: [
                     'status' => 'error',
-                    'message' => 'ID es requerido',
+                    'message' => 'Método no permitido, se requiere POST',
                     'data' => null
                 ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
             }
             break;
-        case 'usuario/agregar':
-            $controller = new UsuarioController();
-            $controller->registrar();
+
+        case 'usuario/obtenerporid':
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $controller = new UsuarioController();
+                $id = $_GET['id'] ?? null; // El ID se pasa como un parámetro GET
+                if ($id) {
+                    $controller->obtenerPorId(id: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere GET',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
             break;
+
+        case 'usuario/agregar':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new UsuarioController();
+                $controller->registrar();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'usuario/modificar':
+            if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                $controller = new UsuarioController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null; // El ID se pasa como un parámetro GET
+                if ($id) {
+                    $controller->actualizarUsuario(id: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere PUT',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'usuario/eliminar':
+            if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                $controller = new UsuarioController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null;
+                if ($id) {
+                    $controller->eliminarUsuario(id: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere DELETE',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+            case 'usuario/obtenerlista':
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller = new UsuarioController();
+                    $controller->obtenerListadoUsuarios();
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'Método no permitido, se requiere POST',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 405); // 405 Method Not Allowed
+                }
+                break;
 
         default:
             echo json_encode(value: ['status' => 'error', 'message' => 'Ruta no válida']);
+            http_response_code(response_code: 404); // 404 Not Found
             break;
     }
+
 } else {
     // Ruta no encontrada
     echo json_encode(value: ['status' => 'error', 'message' => 'Recurso no encontrado']);
