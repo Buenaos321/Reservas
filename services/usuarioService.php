@@ -22,7 +22,9 @@ class UsuarioService
                     'data' => null
                 ];
             }
-
+            if (!empty($clave)) {
+                $clave = password_hash(password: $clave, algo: PASSWORD_BCRYPT);
+            }
             $usuarioId = $this->usuarioModel->crear(email: $email, clave: $clave, nombre: $nombre);
             if ($usuarioId) {
                 return [
@@ -83,6 +85,10 @@ class UsuarioService
                         'data' => null
                     ];
                 }
+            }
+
+            if (!empty($clave)) {
+                $clave = password_hash(password: $clave, algo: PASSWORD_BCRYPT);
             }
 
             $resultado = $this->usuarioModel->actualizarUsuario(id: $id, email: $email, nombre: $nombre, clave: $clave);

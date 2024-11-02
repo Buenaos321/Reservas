@@ -19,9 +19,8 @@ class LoginService {
                 'data' => null
             ];
         }
-
-        // Verificar la clave (puedes usar password_verify si las claves están hasheadas)
-        if ($usuario['clave'] !== $clave) {
+        // Verificar la contraseña ingresada con el hash almacenado
+        if (!password_verify(password: $clave, hash: $usuario['clave'])) {
             return [
                 'status' => 'error',
                 'message' => 'Clave incorrecta',
