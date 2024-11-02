@@ -43,7 +43,7 @@ if (array_key_exists(key: $route, array: $routes)) {
             $controller = new LoginController();
             $controller->login();
             break;
-        case 'usuarios/obtenerporid':
+        case 'usuario/obtenerporid':
             $controller = new UsuarioController();
             $id = $_GET['id'] ?? null; // Suponiendo que el ID viene como parámetro GET
             if ($id) {
