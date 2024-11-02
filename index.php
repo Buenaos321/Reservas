@@ -181,6 +181,7 @@ function mostrarMensajeAPIEnEjecucion($mensajeAdicional = null): void
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>API en Ejecución</title>
+            <link rel="icon" type="image/png" href="src/img/icon.svg">
             <style>
                 body, html {
                     margin: 0;
@@ -203,7 +204,7 @@ function mostrarMensajeAPIEnEjecucion($mensajeAdicional = null): void
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background-image: url("src/img/Inicio.jpg");
+                    background-image: url("src/img/Inicio.svg");
                     background-size: cover; /* La imagen cubre todo el área */
                     background-position: center; /* Centra la imagen */
                     background-repeat: no-repeat; /* Evita que la imagen se repita */
@@ -218,7 +219,7 @@ function mostrarMensajeAPIEnEjecucion($mensajeAdicional = null): void
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background-color: rgba(0, 0, 0, 0.76); /* Capa negra con opacidad */
+                    background-color: rgba(0, 0, 0, 0.60); /* Capa negra con opacidad */
                     z-index: 2; /* Asegura que esté por encima de la imagen */
                 }
 
