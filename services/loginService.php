@@ -10,7 +10,7 @@ class LoginService {
 
     public function autenticar($email, $clave): array {
         // Obtener el usuario por email
-        $usuario = $this->usuarioModel->obtenerPorEmail($email);
+        $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
 
         if (!$usuario) {
             return [

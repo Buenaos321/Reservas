@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../models/usuarioModel.php';
 
-class UsuarioService {
+class UsuarioService
+{
     private $usuarioModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->usuarioModel = new usuarioModel();
     }
 
-    public function registrarUsuario($email, $clave, $nombre): array {
+    public function registrarUsuario($email, $clave, $nombre): array
+    {
         try {
             $usuarioId = $this->usuarioModel->crear(email: $email, clave: $clave, nombre: $nombre);
             if ($usuarioId) {
@@ -33,7 +36,8 @@ class UsuarioService {
         }
     }
 
-    public function obtenerUsuarioPorId($id): array {
+    public function obtenerUsuarioPorId($id): array
+    {
         try {
             $usuario = $this->usuarioModel->obtenerPorId(id: $id);
             if ($usuario) {
@@ -57,9 +61,10 @@ class UsuarioService {
         }
     }
 
-    public function actualizarUsuario($id, $email, $nombre): array {
+    public function actualizarUsuario($id, $email, $nombre, $clave): array
+    {
         try {
-            $resultado = $this->usuarioModel->actualizar(id: $id, email: $email, nombre: $nombre);
+            $resultado = $this->usuarioModel->actualizar(id: $id, email: $email, nombre: $nombre, clave: $clave);
             if ($resultado) {
                 return [
                     'status' => 'success',
@@ -82,7 +87,8 @@ class UsuarioService {
         }
     }
 
-    public function eliminarUsuario($id): array {
+    public function eliminarUsuario($id): array
+    {
         try {
             $resultado = $this->usuarioModel->eliminar(id: $id);
             if ($resultado) {

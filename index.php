@@ -20,7 +20,8 @@ if (!$dbConnection) {
 // Define las rutas de los controladores
 $routes = [
     'login' => 'controllers/loginController.php',
-    'usuario/obtenerporid' => 'controllers/usuarioController.php'
+    'usuario/obtenerporid' => 'controllers/usuarioController.php',
+    'usuario/agregar'=> 'controllers/usuarioController.php',
 ];
 
 // Obtener la ruta solicitada (ejemplo: `http://tudominio.com/index.php?route=login`)
@@ -55,6 +56,10 @@ if (array_key_exists(key: $route, array: $routes)) {
                     'data' => null
                 ]);
             }
+            break;
+        case 'usuario/agregar':
+            $controller = new UsuarioController();
+            $controller->registrar();
             break;
 
         default:

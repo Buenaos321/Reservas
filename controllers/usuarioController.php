@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../services/usuarioService.php';
-require_once __DIR__ . '/../config/authMiddleware.php'; // Asegúrate de incluir el middleware
+require_once __DIR__ . '/../config/authMiddleware.php';
 
 class UsuarioController {
     private $usuarioService;
@@ -8,18 +8,22 @@ class UsuarioController {
 
     public function __construct() {
         $this->usuarioService = new UsuarioService();
-        $this->authMiddleware = new AuthMiddleware(); // Inicializa el middleware
+        $this->authMiddleware = new AuthMiddleware();
     }
 
     public function registrar(): void {
         try {
-            $email = $_POST['email'] ?? null;
-            $clave = $_POST['clave'] ?? null;
-            $nombre = $_POST['nombre'] ?? null;
-
-            // Validación simple de entrada
+            // Leer el cuerpo de la solicitud y decodificar el JSON
+            $data = json_decode(json: file_get_contents(filename: 'php://input'), associative: true);
+            
+            // Obtener valores del JSON decodificado
+            $email = $data['email'] ?? null;
+            $clave = $data['clave'] ?? null;
+            $nombre = $data['nombre'] ?? null;
+    
+            // Validación de campos
             if (!$email || !$clave || !$nombre) {
-                echo json_encode([
+                echo json_encode(value: [
                     'status' => 'error',
                     'message' => 'Email, clave y nombre son requeridos',
                     'data' => null
@@ -27,12 +31,12 @@ class UsuarioController {
                 http_response_code(response_code: 400); // Código de respuesta 400 Bad Request
                 return;
             }
-
+    
+            // Llamar al servicio para registrar el usuario
             $respuesta = $this->usuarioService->registrarUsuario(email: $email, clave: $clave, nombre: $nombre);
             echo json_encode(value: $respuesta);
-
+    
         } catch (Exception $e) {
-            // Manejo de excepciones desde el controlador
             echo json_encode(value: [
                 'status' => 'error',
                 'message' => 'Error en el registro del usuario: ' . $e->getMessage(),
@@ -43,16 +47,15 @@ class UsuarioController {
     }
 
     public function obtenerPorId($id): void {
-        // Verifica el token JWT
-        $decoded = $this->authMiddleware->verificarToken(); // Llama al método sin parámetros, ya que se obtiene con getallheaders() en el middleware
-
         try {
-            // El token es válido, continúa con la lógica de obtención del usuario
+            // Verificación de token JWT usando el middleware
+            $this->authMiddleware->verificarToken(); // Este método lanza una excepción si el token es inválido
+
+            // Token válido, continuar con la obtención del usuario
             $respuesta = $this->usuarioService->obtenerUsuarioPorId(id: $id);
             echo json_encode(value: $respuesta);
 
         } catch (Exception $e) {
-            // Manejo de excepciones desde el controlador
             echo json_encode(value: [
                 'status' => 'error',
                 'message' => 'Error al obtener el usuario: ' . $e->getMessage(),
