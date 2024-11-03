@@ -1,7 +1,3 @@
-Para hacer que tu README sea completo y útil, especialmente en el contexto de una API que ofrece una pantalla de inicio para el estado de la conexión, te recomiendo estructurar el archivo README en secciones que cubran los aspectos más importantes de la instalación, configuración, y funcionamiento de la API. Aquí tienes una guía de las secciones que podrían formar un README bien documentado:
-
----
-
 # Documentación de la API de Reservas
 
 ## Índice
