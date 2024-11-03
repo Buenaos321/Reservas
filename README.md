@@ -10,8 +10,7 @@
 6. [Pantalla de Estado de la API](#pantalla-de-estado-de-la-api)
 7. [Errores Frecuentes al Instalar la App](#errores-frecuentes-al-instalar-la-app)
 8. [Uso de la API](#uso-de-la-api)
-9. [Contribuciones](#contribuciones)
-10. [Licencia](#licencia)
+9. [Licencia](#licencia)
 
 ## Introducción
 
@@ -76,9 +75,6 @@ La API proporciona una **pantalla de inicio** que verifica:
 
 Si la conexión con la base de datos **no fue exitosa**, la pantalla de inicio mostrará un mensaje de error con la excepción correspondiente. Esto facilita la identificación y resolución de problemas de conexión a la base de datos.
 
-## Errores Frecuentes al Instalar la App
-
-Si encuentras el error `could not find driver`, consulta la [sección de errores frecuentes](#errores-frecuentes-al-instalar-la-app) para resolver problemas comunes relacionados con la instalación de las extensiones de PHP.
 
 ## Uso de la API
 
@@ -114,7 +110,12 @@ Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/lic
 
 ---
 
-### Errores Frecuentes al Instalar la App
+
+
+
+
+
+# Errores Frecuentes al Instalar la App
 
 1. **Error "could not find driver"**:
    - Indica que la extensión de PHP para PostgreSQL no está habilitada o instalada. 
