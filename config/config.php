@@ -12,7 +12,7 @@ define(constant_name: 'SECRET_KEY', value: 'tu_clave_secreta');
  * - 'pgsql' para PostgreSQL
  * - 'mysql' para MySQL
  */
-define(constant_name: 'DB_TYPE', value: 'pgsql');
+define(constant_name: 'DB_TYPE', value: 'mysql');
 
 /**
  * Host de la base de datos.
