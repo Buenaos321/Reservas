@@ -25,19 +25,19 @@ define(constant_name: 'DB_HOST', value: 'localhost');
  * Nombre de la base de datos.
  * Indica el nombre de la base de datos a la que se conectará la aplicación.
  */
-define(constant_name: 'DB_NAME', value: 'RESERVAS');
+define(constant_name: 'DB_NAME', value: 'reserva_salones_universidad');
 
 /**
  * Nombre de usuario para la conexión de base de datos.
  * Proporciona el nombre de usuario con permisos para acceder a la base de datos.
  */
-define(constant_name: 'DB_USERNAME', value: 'ADMINISTRADOR');
+define(constant_name: 'DB_USERNAME', value: 'administrador');
 
 /**
  * Contraseña del usuario de la base de datos.
  * La contraseña correspondiente al usuario definido en DB_USERNAME.
  * IMPORTANTE: Asegúrate de proteger este valor y evitar que sea accesible públicamente.
  */
-define(constant_name: 'DB_PASSWORD', value: 'd!6@!7mX*sHw0-s*');
+define(constant_name: 'DB_PASSWORD', value: 'gS7-gyOfSZB80oK]');
 #endregion
 
