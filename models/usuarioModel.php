@@ -100,7 +100,7 @@ class usuarioModel
             $tipoDocumento=null, 
             $numeroDocumento=null): bool
     {
-        if (empty($nombre), empty($email), empty($clave), empty($rol), empty($tipoDocumento), empty($numeroDocumento)) {
+        if (empty($nombre) && empty($email) && empty($clave) && empty($rol) && empty($tipoDocumento) && empty($numeroDocumento)) {
             return false;
         }
         // Comienza la construcción de la consulta
