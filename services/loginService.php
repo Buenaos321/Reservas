@@ -1,16 +1,28 @@
 <?php
 require_once __DIR__ . '/../models/usuarioModel.php';
 
-class LoginService {
+class LoginService
+{
     private $usuarioModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->usuarioModel = new UsuarioModel();
     }
 
-    public function autenticar($email, $clave): array {
+    public function autenticar($email, $numeroDocumento, $clave): array
+    {
+        $usuario =null;
+        if(!empty($email)){
+            $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
+
+        }
         // Obtener el usuario por email
-        $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
+
+        
+        if (!$usuario && !empty($numeroDocumento)) {
+            $usuario = $this->usuarioModel->obtenerPorNumeroIdentificacion(numeroDocumento: $numeroDocumento);
+        }
 
         if (!$usuario) {
             return [

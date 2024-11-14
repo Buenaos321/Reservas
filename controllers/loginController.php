@@ -18,12 +18,13 @@ class LoginController {
 
         // Validación de entrada
         $email = $data->email ?? null;
+        $nunumeroDocumento = $data->nunumeroDocumento ?? null;
         $clave = $data->clave ?? null;
 
-        if (!$email || !$clave) {
+        if ((empty($email) && empty($nunumeroDocumento)) || !$clave) {
             echo json_encode(value: [
                 'status' => 'error',
-                'message' => 'Email y clave son requeridos',
+                'message' => 'El documento o el e-mail y clave son requeridos',
                 'data' => null
             ]);
             return;
@@ -31,7 +32,7 @@ class LoginController {
 
         // Lógica de autenticación
         try {
-            $respuesta = $this->loginService->autenticar(email: $email, clave: $clave);
+            $respuesta = $this->loginService->autenticar(email: $email,numeroDocumento:$nunumeroDocumento, clave: $clave);
 
             // Si la autenticación es exitosa, genera el token JWT
             if ($respuesta['status'] === 'success') {

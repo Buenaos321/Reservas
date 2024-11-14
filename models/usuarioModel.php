@@ -23,16 +23,34 @@ class usuarioModel
     {
         $query = "SELECT 
                 IdUsuario AS id,
-                Nombre AS nombre,
-                Correo AS email,
                 Clave AS clave,
-                Rol AS rol,
-                TipoDocumento AS tipoDocumento,
-                NumeroDocumento AS numeroDocumento
+                Nombre AS nombre,
+                Correo AS email
             FROM USUARIOS 
                 WHERE CORREO = :email LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Permite obtener el usuario por numero de identificacion(cedula)
+     * @param mixed $numeroDocumento
+     * @return mixed
+     */
+    public function obtenerPorNumeroIdentificacion($numeroDocumento): mixed
+    {
+        $query = "SELECT 
+                IdUsuario AS id,
+                Clave AS clave,
+                Nombre AS nombre,
+                Correo AS email
+            FROM USUARIOS 
+                WHERE NumeroDocumento = :numeroDocumento LIMIT 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':numeroDocumento', $numeroDocumento);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -58,7 +76,7 @@ class usuarioModel
         return false;
     }
 
-    public function consultarClave($id):mixed
+    public function consultarClave($id): mixed
     {
         $query = "SELECT 
             IdUsuario AS id,
@@ -86,20 +104,20 @@ class usuarioModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    
+
     /**
-    * Para actualizar un usuario se requiere que alguno de los datos de actualizacion 
-    * se encuentre definido de lo contrario no se hara la actualizacion
-    */
+     * Para actualizar un usuario se requiere que alguno de los datos de actualizacion 
+     * se encuentre definido de lo contrario no se hara la actualizacion
+     */
     public function actualizarUsuario(
-            $id, 
-            $nombre=null, 
-            $email=null, 
-            $clave=null, 
-            $rol=null, 
-            $tipoDocumento=null, 
-            $numeroDocumento=null): bool
-    {
+        $id,
+        $nombre = null,
+        $email = null,
+        $clave = null,
+        $rol = null,
+        $tipoDocumento = null,
+        $numeroDocumento = null
+    ): bool {
         if (empty($nombre) && empty($email) && empty($clave) && empty($rol) && empty($tipoDocumento) && empty($numeroDocumento)) {
             return false;
         }
@@ -114,11 +132,11 @@ class usuarioModel
             $params[':nombre'] = $nombre;
         }
 
-        if (!empty($email) ) {
+        if (!empty($email)) {
             $query .= "Correo = :email, ";
             $params[':email'] = $email;
         }
-        
+
         if (!empty($clave)) {
             $query .= "Clave = :clave, ";
             $params[':clave'] = $clave;
@@ -142,7 +160,7 @@ class usuarioModel
 
         // Eliminar la última coma y espacio
         $query = rtrim(string: $query, characters: ', ');
-        
+
         // Añadir la cláusula WHERE
         $query .= " WHERE IdUsuario = :id";
         $params[':id'] = $id; // Añadir el ID al array de parámetros
@@ -177,12 +195,12 @@ class usuarioModel
             TipoDocumento AS tipoDocumento,
             NumeroDocumento AS numeroDocumento
         FROM USUARIOS";
-        
+
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        
+
         // Cambiar fetch a fetchAll para obtener todos los usuarios
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
 }
