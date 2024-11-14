@@ -22,10 +22,13 @@ class usuarioModel
     public function obtenerPorEmail($email): mixed
     {
         $query = "SELECT 
-                ID_USUARIO AS id,
-                NOMBRE AS nombre,
-                CORREO AS email,
-                PASSWORDHASH AS clave  
+                IdUsuario AS id,
+                Nombre AS nombre,
+                Correo AS email,
+                Clave AS clave,
+                Rol AS rol,
+                TipoDocumento AS tipoDocumento,
+                NumeroDocumento AS numeroDocumento
             FROM USUARIOS 
                 WHERE CORREO = :email LIMIT 1";
         $stmt = $this->db->prepare($query);
@@ -35,13 +38,18 @@ class usuarioModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function crear($email, $clave, $nombre): mixed
+    public function crear($nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): mixed
     {
-        $query = "INSERT INTO USUARIOS (NOMBRE,CORREO, PASSWORDHASH) VALUES (:nombre,:email, :clave)";
+        $query = "INSERT INTO USUARIOS 
+            (Nombre,Correo, Clave, Rol, TipoDocumento, NumeroDocumento) VALUES 
+            (:nombre,:email,:clave,:rol,:tipoDocumento,:numeroDocumento)";
         $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':clave', $clave);
-        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':tipoDocumento', $tipoDocumento);
+        $stmt->bindParam(':numeroDocumento', $numeroDocumento);
 
         if ($stmt->execute()) {
             return $this->db->lastInsertId();
@@ -50,13 +58,11 @@ class usuarioModel
         return false;
     }
 
-    public function obtenerPorId($id): mixed
+    public function consultarClave($id):mixed
     {
         $query = "SELECT 
-            ID_USUARIO AS id,
-            NOMBRE AS nombre,
-            CORREO AS email,
-            PASSWORDHASH AS clave
+            IdUsuario AS id,
+            Clave AS clave
         FROM USUARIOS WHERE ID_USUARIO = :id LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -64,9 +70,37 @@ class usuarioModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function actualizarUsuario($id, $email = null, $nombre = null, $clave = null): bool
+    public function obtenerPorId($id): mixed
     {
-        if (empty($email) && empty($nombre) && empty($clave)) {
+        $query = "SELECT 
+            IdUsuario AS id,
+            Nombre AS nombre,
+            Correo AS email,
+            Rol AS rol,
+            TipoDocumento AS tipoDocumento,
+            NumeroDocumento AS numeroDocumento
+        FROM USUARIOS WHERE ID_USUARIO = :id LIMIT 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    
+    /**
+    * Para actualizar un usuario se requiere que alguno de los datos de actualizacion 
+    * se encuentre definido de lo contrario no se hara la actualizacion
+    */
+    public function actualizarUsuario(
+            $id, 
+            $nombre=null, 
+            $email=null, 
+            $clave=null, 
+            $rol=null, 
+            $tipoDocumento=null, 
+            $numeroDocumento=null): bool
+    {
+        if (empty($nombre), empty($email), empty($clave), empty($rol), empty($tipoDocumento), empty($numeroDocumento)) {
             return false;
         }
         // Comienza la construcción de la consulta
@@ -74,26 +108,43 @@ class usuarioModel
         $params = []; // Array para almacenar los parámetros
 
         // Agregar campos a la consulta y parámetros según corresponda
-        if (!empty($email) ) {
-            $query .= "CORREO = :email, ";
-            $params[':email'] = $email;
-        }
-        
+
         if (!empty($nombre)) {
-            $query .= "NOMBRE = :nombre, ";
+            $query .= "Nombre = :nombre, ";
             $params[':nombre'] = $nombre;
         }
 
+        if (!empty($email) ) {
+            $query .= "Correo = :email, ";
+            $params[':email'] = $email;
+        }
+        
         if (!empty($clave)) {
-            $query .= "PASSWORDHASH = :clave, ";
+            $query .= "Clave = :clave, ";
             $params[':clave'] = $clave;
+        }
+
+
+        if (!empty($rol)) {
+            $query .= "Rol = :rol, ";
+            $params[':rol'] = $rol;
+        }
+
+        if (!empty($tipoDocumento)) {
+            $query .= "TipoDocumento = :tipoDocumento, ";
+            $params[':tipoDocumento'] = $tipoDocumento;
+        }
+
+        if (!empty($numeroDocumento)) {
+            $query .= "NumeroDocumento = :numeroDocumento, ";
+            $params[':numeroDocumento'] = $numeroDocumento;
         }
 
         // Eliminar la última coma y espacio
         $query = rtrim(string: $query, characters: ', ');
         
         // Añadir la cláusula WHERE
-        $query .= " WHERE ID_USUARIO = :id";
+        $query .= " WHERE IdUsuario = :id";
         $params[':id'] = $id; // Añadir el ID al array de parámetros
 
         // Preparar y ejecutar la consulta
@@ -110,7 +161,7 @@ class usuarioModel
 
     public function eliminar($id): mixed
     {
-        $query = "DELETE FROM USUARIOS WHERE ID_USUARIO = :id";
+        $query = "DELETE FROM usuarios WHERE IdUsuario = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
@@ -119,10 +170,12 @@ class usuarioModel
     public function obtenerListadoUsuarios(): mixed
     {
         $query = "SELECT 
-            ID_USUARIO AS id,
-            NOMBRE AS nombre,
-            CORREO AS email,
-            PASSWORDHASH AS clave
+            IdUsuario AS id,
+            Nombre AS nombre,
+            Correo AS email,
+            Rol AS rol,
+            TipoDocumento AS tipoDocumento,
+            NumeroDocumento AS numeroDocumento
         FROM USUARIOS";
         
         $stmt = $this->db->prepare($query);
