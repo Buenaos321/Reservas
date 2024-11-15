@@ -81,7 +81,7 @@ class usuarioModel
         $query = "SELECT 
             IdUsuario AS id,
             Clave AS clave
-        FROM USUARIOS WHERE ID_USUARIO = :id LIMIT 1";
+        FROM USUARIOS WHERE IdUsuario = :id LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
@@ -97,7 +97,7 @@ class usuarioModel
             Rol AS rol,
             TipoDocumento AS tipoDocumento,
             NumeroDocumento AS numeroDocumento
-        FROM USUARIOS WHERE ID_USUARIO = :id LIMIT 1";
+        FROM USUARIOS WHERE IdUsuario = :id LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
