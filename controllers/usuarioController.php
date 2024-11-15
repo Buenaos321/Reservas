@@ -80,7 +80,6 @@ class UsuarioController
             // Leer y decodificar el JSON del cuerpo de la solicitud
             $data = json_decode(json: file_get_contents(filename: 'php://input'), associative: true);
 
-            $id = $data['id'] ?? null;
             $nombre = $data['nombre'] ?? null;
             $email = $data['email'] ?? null;
             $clave = $data['clave'] ?? null;
