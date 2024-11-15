@@ -109,15 +109,8 @@ class usuarioModel
      * Para actualizar un usuario se requiere que alguno de los datos de actualizacion 
      * se encuentre definido de lo contrario no se hara la actualizacion
      */
-    public function actualizarUsuario(
-        $id,
-        $nombre = null,
-        $email = null,
-        $clave = null,
-        $rol = null,
-        $tipoDocumento = null,
-        $numeroDocumento = null
-    ): bool {
+    public function actualizarUsuario($id, $nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): bool
+    {
         if (empty($nombre) && empty($email) && empty($clave) && empty($rol) && empty($tipoDocumento) && empty($numeroDocumento)) {
             return false;
         }

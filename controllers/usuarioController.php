@@ -20,15 +20,18 @@ class UsuarioController
             $data = json_decode(json: file_get_contents(filename: 'php://input'), associative: true);
 
             // Obtener valores del JSON decodificado
+            $nombre = $data['nombre'] ?? null;
             $email = $data['email'] ?? null;
             $clave = $data['clave'] ?? null;
-            $nombre = $data['nombre'] ?? null;
+            $rol = $data['rol'] ?? null;
+            $tipoDocumento = $data['tipoDocumento'] ?? null;
+            $numeroDocumento = $data['numeroDocumento'] ?? null;
 
             // Validación de campos
-            if (!$email || !$clave || !$nombre) {
+            if (empty($nombre) || empty($email) || empty($clave) || empty($rol) || empty($tipoDocumento) || empty($numeroDocumento)) {
                 echo json_encode(value: [
                     'status' => 'error',
-                    'message' => 'Email, clave y nombre son requeridos',
+                    'message' => 'Los campos de nombre, email, rol, tipo de documento, numero de documento y contraseña son requeridos para el registro del usuario',
                     'data' => null
                 ]);
                 http_response_code(response_code: 400); // Código de respuesta 400 Bad Request
@@ -36,7 +39,7 @@ class UsuarioController
             }
 
             // Llamar al servicio para registrar el usuario
-            $respuesta = $this->usuarioService->registrarUsuario(email: $email, clave: $clave, nombre: $nombre);
+            $respuesta = $this->usuarioService->registrarUsuario(nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
             echo json_encode(value: $respuesta);
 
         } catch (Exception $e) {
@@ -77,11 +80,14 @@ class UsuarioController
             // Leer y decodificar el JSON del cuerpo de la solicitud
             $data = json_decode(json: file_get_contents(filename: 'php://input'), associative: true);
 
-            // Extraer valores del JSON, si están presentes
+            $id = $data['id'] ?? null;
             $nombre = $data['nombre'] ?? null;
             $email = $data['email'] ?? null;
             $clave = $data['clave'] ?? null;
-            
+            $rol = $data['rol'] ?? null;
+            $tipoDocumento = $data['tipoDocumento'] ?? null;
+            $numeroDocumento = $data['numeroDocumento'] ?? null;
+
 
             // Validación: al menos uno de los campos debe estar presente
             if (!$nombre && !$email && !$clave) {
@@ -95,7 +101,7 @@ class UsuarioController
             }
 
             // Llama al servicio para actualizar el usuario con los valores proporcionados
-            $respuesta = $this->usuarioService->actualizarUsuario(id: $id, email: $email, nombre: $nombre, clave: $clave);
+            $respuesta = $this->usuarioService->actualizarUsuario(id: $id, nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
             echo json_encode(value: $respuesta);
 
         } catch (Exception $e) {

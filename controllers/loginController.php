@@ -17,11 +17,10 @@ class LoginController {
         $data = json_decode(json: file_get_contents(filename: "php://input"));
 
         // Validación de entrada
-        $email = $data->email ?? null;
-        $nunumeroDocumento = $data->nunumeroDocumento ?? null;
+        $idUsuario = $data->idUsuario ?? null;
         $clave = $data->clave ?? null;
 
-        if ((empty($email) && empty($nunumeroDocumento)) || !$clave) {
+        if ((empty($idUsuario)) || !$clave) {
             echo json_encode(value: [
                 'status' => 'error',
                 'message' => 'El documento o el e-mail y clave son requeridos',
@@ -32,11 +31,11 @@ class LoginController {
 
         // Lógica de autenticación
         try {
-            $respuesta = $this->loginService->autenticar(email: $email,numeroDocumento:$nunumeroDocumento, clave: $clave);
+            $respuesta = $this->loginService->autenticar(email: $idUsuario,numeroDocumento:$idUsuario, clave: $clave);
 
             // Si la autenticación es exitosa, genera el token JWT
             if ($respuesta['status'] === 'success') {
-                $token = $this->generarToken(email: $email); // Generar el token
+                $token = $this->generarToken(idUsuario: $idUsuario); // Generar el token es numero de identificacion o email
                 $respuesta['token'] = $token; // Agregar el token a la respuesta
             }
 
@@ -51,12 +50,12 @@ class LoginController {
         }
     }
 
-    private function generarToken($email): string {
+    private function generarToken($idUsuario): string {
         // Crea el payload del token
         $payload = [
             'iat' => time(), // Tiempo en que se emite el token
             'exp' => time() + (24 * 60 * 60), // Tiempo de expiración (1 día = 24 horas)
-            'email' => $email // Puedes agregar más datos si es necesario
+            'idUsuario' => $idUsuario // Puedes agregar más datos si es necesario
         ];
 
         // Generar el token

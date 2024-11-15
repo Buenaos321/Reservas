@@ -13,13 +13,13 @@ class LoginService
     public function autenticar($email, $numeroDocumento, $clave): array
     {
         $usuario =null;
+        // Obtener el usuario por email
         if(!empty($email)){
             $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
 
         }
-        // Obtener el usuario por email
-
         
+        // Obtener el usuario por numero de documento
         if (!$usuario && !empty($numeroDocumento)) {
             $usuario = $this->usuarioModel->obtenerPorNumeroIdentificacion(numeroDocumento: $numeroDocumento);
         }

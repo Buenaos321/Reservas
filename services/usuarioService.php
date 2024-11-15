@@ -10,7 +10,7 @@ class UsuarioService
         $this->usuarioModel = new usuarioModel();
     }
 
-    public function registrarUsuario($email, $clave, $nombre): array
+    public function registrarUsuario($nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): array
     {
         try {
             $usuario = $this->usuarioModel->obtenerPorEmail(email: $email);
@@ -22,10 +22,23 @@ class UsuarioService
                     'data' => null
                 ];
             }
+
+            $usuario = $this->usuarioModel->obtenerPorNumeroIdentificacion(numeroDocumento: $numeroDocumento);
+
+            if ($usuario) {
+                return [
+                    'status' => 'error',
+                    'message' => 'El usuario con el numero de identificación ingresado ya se encuentra registrado en el sistema',
+                    'data' => null
+                ];
+            }
+
+
             if (!empty($clave)) {
                 $clave = password_hash(password: $clave, algo: PASSWORD_BCRYPT);
             }
-            $usuarioId = $this->usuarioModel->crear(email: $email, clave: $clave, nombre: $nombre);
+
+            $usuarioId = $this->usuarioModel->crear(nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
             if ($usuarioId) {
                 return [
                     'status' => 'success',
@@ -73,7 +86,7 @@ class UsuarioService
         }
     }
 
-    public function actualizarUsuario($id, $email, $nombre, $clave): array
+    public function actualizarUsuario($id, $nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): array
     {
         try {
             if ($email != null) {
@@ -91,7 +104,8 @@ class UsuarioService
                 $clave = password_hash(password: $clave, algo: PASSWORD_BCRYPT);
             }
 
-            $resultado = $this->usuarioModel->actualizarUsuario(id: $id, email: $email, nombre: $nombre, clave: $clave);
+            $resultado = $this->usuarioModel->actualizarUsuario(id: $id, nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
+
             if ($resultado) {
                 return [
                     'status' => 'success',
