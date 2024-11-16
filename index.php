@@ -1,9 +1,13 @@
 <?php
-// Habilita CORS si es necesario
 header(header: 'Access-Control-Allow-Origin: *');
 header(header: 'Content-Type: application/json; charset=UTF-8');
-header(header: 'Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header(header: 'Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
 header(header: 'Access-Control-Allow-Headers: Content-Type, Authorization');
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(response_code: 200);
+    exit();
+}
+
 
 // Autoload de clases o inclusión de archivos necesarios
 require_once 'includes.php';
