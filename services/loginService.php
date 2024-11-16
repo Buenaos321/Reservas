@@ -48,6 +48,7 @@ class LoginService
                 'id' => $usuario['id'],
                 'email' => $usuario['email'],
                 'nombre' => $usuario['nombre'],
+                'rol' => $usuario['rol'],
             ]
         ];
     }

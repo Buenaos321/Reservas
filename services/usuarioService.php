@@ -86,7 +86,7 @@ class UsuarioService
         }
     }
 
-    public function actualizarUsuario($id, $nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): array
+    public function actualizarUsuario($id, $nombre, $email, $rol, $tipoDocumento, $numeroDocumento): array
     {
         try {
             if ($email != null) {
@@ -104,7 +104,7 @@ class UsuarioService
                 $clave = password_hash(password: $clave, algo: PASSWORD_BCRYPT);
             }
 
-            $resultado = $this->usuarioModel->actualizarUsuario(id: $id, nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
+            $resultado = $this->usuarioModel->actualizarUsuario(id: $id, nombre: $nombre, email: $email, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
 
             if ($resultado) {
                 return [
@@ -180,5 +180,79 @@ class UsuarioService
             ];
         }
     }
+
+    /**
+     * Recibe como parametros la clave antigua y la clave nueva 
+     * para posteriormente hacer las validaciones para actualizar la contraseña
+     * @param mixed $idUsuario
+     * @param mixed $claveAnterior
+     * @param mixed $nuevaClave
+     * @return array
+     */
+    public function actualizarClave($idUsuario, $claveAnterior, $nuevaClave): array
+    {
+        try {
+            // Verificar que todos los parámetros necesarios estén presentes
+            if (empty($idUsuario) || empty($claveAnterior) || empty($nuevaClave)) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Para actualizar la contraseña es necesario enviar el identificador del usuario, la clave anterior y la nueva clave',
+                    'data' => null
+                ];
+            }
+
+            // Obtener el usuario por email o número de identificación
+            $usuario = $this->usuarioModel->obtenerPorEmail(email: $idUsuario) ?: $this->usuarioModel->obtenerPorNumeroIdentificacion($idUsuario);
+
+            // Verificar si el usuario existe
+            if (!$usuario) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Usuario no encontrado',
+                    'data' => null
+                ];
+            }
+
+            // Verificar si la contraseña anterior coincide con la almacenada
+            if (!password_verify(password: $claveAnterior, hash: $usuario['clave'])) {
+                return [
+                    'status' => 'error',
+                    'message' => 'La contraseña actual no coincide con la guardada por el usuario',
+                    'data' => null
+                ];
+            }
+
+            // Hashear la nueva contraseña
+            $nuevaClaveHashed = password_hash(password: $nuevaClave, algo: PASSWORD_BCRYPT);
+
+            // Actualizar la contraseña en la base de datos
+            $actualizado = $this->usuarioModel->actualizarClaveUsuario(idUsuario: $usuario['id'], nuevaClaveHashed: $nuevaClaveHashed);
+
+            if (!$actualizado) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Error al actualizar la contraseña',
+                    'data' => null
+                ];
+            }else{
+                return [
+                    'status' => 'success',
+                    'message' => 'Contraseña acttualizada con exito',
+                    'data' => null
+                ];
+            }
+
+
+
+        } catch (Exception $e) {
+            // Manejo de excepciones
+            return [
+                'status' => 'error',
+                'message' => 'Error al momento de actualizar la contraseña del usuario: ' . $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
 
 }

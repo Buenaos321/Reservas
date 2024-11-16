@@ -82,17 +82,31 @@ class UsuarioController
 
             $nombre = $data['nombre'] ?? null;
             $email = $data['email'] ?? null;
-            $clave = $data['clave'] ?? null;
             $rol = $data['rol'] ?? null;
             $tipoDocumento = $data['tipoDocumento'] ?? null;
             $numeroDocumento = $data['numeroDocumento'] ?? null;
 
 
             // Validación: al menos uno de los campos debe estar presente
-            if (!$nombre && !$email && !$clave) {
+            if (empty($id)) {
                 echo json_encode(value: [
                     'status' => 'error',
-                    'message' => 'Al menos uno de los campos (nombre, email, clave) debe ser proporcionado para actualizar',
+                    'message' => 'El identificador del Usuario es necesario para su modificacion',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 400); // 400 Bad Request
+                return;
+            }
+            if (
+                (!$nombre ||
+                    !$email ||
+                    !$rol ||
+                    !$tipoDocumento ||
+                    !$numeroDocumento)
+            ) {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Al menos uno de los campos del usuario debe ser proporcionado para actualizar',
                     'data' => null
                 ]);
                 http_response_code(response_code: 400); // 400 Bad Request
@@ -100,7 +114,7 @@ class UsuarioController
             }
 
             // Llama al servicio para actualizar el usuario con los valores proporcionados
-            $respuesta = $this->usuarioService->actualizarUsuario(id: $id, nombre: $nombre, email: $email, clave: $clave, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
+            $respuesta = $this->usuarioService->actualizarUsuario(id: $id, nombre: $nombre, email: $email, rol: $rol, tipoDocumento: $tipoDocumento, numeroDocumento: $numeroDocumento);
             echo json_encode(value: $respuesta);
 
         } catch (Exception $e) {
@@ -153,6 +167,30 @@ class UsuarioController
                 'data' => null
             ]);
             http_response_code(response_code: 500); // Código de respuesta 500 Internal Server Error
+        }
+    }
+
+    public function actualizarClave(): void
+    {
+        // Lógica de modificacion
+        try {
+            // Obtiene los datos del cuerpo de la solicitud en formato JSON
+            $data = json_decode(json: file_get_contents(filename: "php://input"));
+            
+            $idUsuario = $data->idUsuario ?? null;
+            $claveAnterior = $data->claveAnterior ?? null;
+            $nuevaClave = $data->nuevaClave ?? null;
+
+            $respuesta = $this->usuarioService->actualizarClave(idUsuario: $idUsuario, claveAnterior: $claveAnterior, nuevaClave: $nuevaClave);
+            echo json_encode(value: $respuesta);
+
+        } catch (Exception $e) {
+            // Manejo de excepciones desde el controlador
+            echo json_encode(value: [
+                'status' => 'error',
+                'message' => 'Error al momento de actualizar la contraseña del usuario: ' . $e->getMessage(),
+                'data' => null
+            ]);
         }
     }
 }

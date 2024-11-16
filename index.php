@@ -26,7 +26,8 @@ $routes = [
     'usuario/agregar' => 'controllers/usuarioController.php',
     'usuario/modificar' => 'controllers/usuarioController.php',
     'usuario/eliminar' => 'controllers/usuarioController.php',
-    'usuario/obtenerlista'=> 'controllers/usuarioController.php'
+    'usuario/obtenerlista'=> 'controllers/usuarioController.php',
+    'usuario/actualizarclave'=> 'controllers/usuarioController.php',
 ];
 
 // Obtener la ruta solicitada (ejemplo: `http://tudominio.com/index.php?route=login`)
@@ -160,6 +161,19 @@ if (array_key_exists(key: $route, array: $routes)) {
                     http_response_code(response_code: 405); // 405 Method Not Allowed
                 }
                 break;
+                case 'usuario/actualizarclave':
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                        $controller = new UsuarioController();
+                        $controller->actualizarClave();
+                    } else {
+                        echo json_encode(value: [
+                            'status' => 'error',
+                            'message' => 'Método no permitido, se requiere POST',
+                            'data' => null
+                        ]);
+                        http_response_code(response_code: 405); // 405 Method Not Allowed
+                    }
+                    break;
 
         default:
             echo json_encode(value: ['status' => 'error', 'message' => 'Ruta no válida']);

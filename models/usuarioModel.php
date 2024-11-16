@@ -25,7 +25,11 @@ class usuarioModel
                 IdUsuario AS id,
                 Clave AS clave,
                 Nombre AS nombre,
-                Correo AS email
+                Correo AS email,
+                (CASE WHEN Rol IS NULL 
+                THEN Rol 
+                ELSE 'U'
+                END) AS rol
             FROM USUARIOS 
                 WHERE CORREO = :email LIMIT 1";
         $stmt = $this->db->prepare($query);
@@ -46,7 +50,11 @@ class usuarioModel
                 IdUsuario AS id,
                 Clave AS clave,
                 Nombre AS nombre,
-                Correo AS email
+                Correo AS email,
+                (CASE WHEN Rol IS NULL 
+                THEN Rol 
+                ELSE 'U'
+                END) AS rol
             FROM USUARIOS 
                 WHERE NumeroDocumento = :numeroDocumento LIMIT 1";
         $stmt = $this->db->prepare($query);
@@ -58,6 +66,14 @@ class usuarioModel
 
     public function crear($nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): mixed
     {
+        if(empty($rol)){
+            $rol='U';
+        }
+        if(empty($tipoDocumento)){
+            $tipoDocumento= 'CC';
+        }
+
+
         $query = "INSERT INTO USUARIOS 
             (Nombre,Correo, Clave, Rol, TipoDocumento, NumeroDocumento) VALUES 
             (:nombre,:email,:clave,:rol,:tipoDocumento,:numeroDocumento)";
@@ -109,9 +125,9 @@ class usuarioModel
      * Para actualizar un usuario se requiere que alguno de los datos de actualizacion 
      * se encuentre definido de lo contrario no se hara la actualizacion
      */
-    public function actualizarUsuario($id, $nombre, $email, $clave, $rol, $tipoDocumento, $numeroDocumento): bool
+    public function actualizarUsuario($id, $nombre, $email, $rol, $tipoDocumento, $numeroDocumento): bool
     {
-        if (empty($nombre) && empty($email) && empty($clave) && empty($rol) && empty($tipoDocumento) && empty($numeroDocumento)) {
+        if (empty($nombre) && empty($email) && empty($rol) && empty($tipoDocumento) && empty($numeroDocumento)) {
             return false;
         }
         // Comienza la construcción de la consulta
@@ -129,12 +145,6 @@ class usuarioModel
             $query .= "Correo = :email, ";
             $params[':email'] = $email;
         }
-
-        if (!empty($clave)) {
-            $query .= "Clave = :clave, ";
-            $params[':clave'] = $clave;
-        }
-
 
         if (!empty($rol)) {
             $query .= "Rol = :rol, ";
@@ -195,5 +205,31 @@ class usuarioModel
         // Cambiar fetch a fetchAll para obtener todos los usuarios
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    /**
+     * Permite el modificar la contraseña del usuario
+     * @param mixed $idUsuario
+     * @param mixed $nuevaClaveHashed enviar la contraseña encriptada
+     * @return bool
+     */
+    public function actualizarClaveUsuario($idUsuario, $nuevaClaveHashed): bool
+    {
+
+        // Conexión a la base de datos (usando PDO)
+        $sql = "UPDATE usuarios SET Clave = :nuevaClave WHERE IdUsuario = :idUsuario";
+
+        // Preparar la consulta
+        $stmt = $this->db->prepare($sql);
+
+        // Vincular parámetros
+        $stmt->bindParam(':nuevaClave', $nuevaClaveHashed, PDO::PARAM_STR);
+        $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+
+        // Ejecutar la consulta
+        return $stmt->execute();
+
+    }
+
 
 }
