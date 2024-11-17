@@ -35,7 +35,7 @@ class LoginController {
 
             // Si la autenticación es exitosa, genera el token JWT
             if ($respuesta['status'] === 'success') {
-                $token = $this->generarToken(idUsuario: $idUsuario); // Generar el token es numero de identificacion o email
+                $token = $this->generarToken(idUsuario: $respuesta['data']['id']); // Generar el token es numero de identificacion o email
                 $respuesta['token'] = $token; // Agregar el token a la respuesta
             }
 
@@ -49,13 +49,17 @@ class LoginController {
             ]);
         }
     }
-
+    /**
+     * Ahora el token guardara el identificador unico del usuario.
+     * @param mixed $idUsuario
+     * @return string
+     */
     private function generarToken($idUsuario): string {
         // Crea el payload del token
         $payload = [
             'iat' => time(), // Tiempo en que se emite el token
             'exp' => time() + (24 * 60 * 60), // Tiempo de expiración (1 día = 24 horas)
-            'idUsuario' => $idUsuario // Puedes agregar más datos si es necesario
+            'id' => $idUsuario // Puedes agregar más datos si es necesario
         ];
 
         // Generar el token

@@ -30,8 +30,14 @@ $routes = [
     'usuario/agregar' => 'controllers/usuarioController.php',
     'usuario/modificar' => 'controllers/usuarioController.php',
     'usuario/eliminar' => 'controllers/usuarioController.php',
-    'usuario/obtenerlista'=> 'controllers/usuarioController.php',
-    'usuario/actualizarclave'=> 'controllers/usuarioController.php',
+    'usuario/obtenerlista' => 'controllers/usuarioController.php',
+    'usuario/actualizarclave' => 'controllers/usuarioController.php',
+    //Inicio rutas de Salones
+    'salones/obtenerporid' => 'controllers/salonesController.php',
+    'salones/obtenerlista' => 'controllers/salonesController.php',
+    'salones/agregar' => 'controllers/salonesController.php',
+    'salones/modificar' => 'controllers/salonesController.php',
+    'salones/eliminar' => 'controllers/salonesController.php',
 ];
 
 // Obtener la ruta solicitada (ejemplo: `http://tudominio.com/index.php?route=login`)
@@ -152,32 +158,135 @@ if (array_key_exists(key: $route, array: $routes)) {
             }
             break;
 
-            case 'usuario/obtenerlista':
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller = new UsuarioController();
-                    $controller->obtenerListadoUsuarios();
+        case 'usuario/obtenerlista':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new UsuarioController();
+                $controller->obtenerListadoUsuarios();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+        case 'usuario/actualizarclave':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new UsuarioController();
+                $controller->actualizarClave();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        //#region Salones
+        case 'salones/obtenerporid':
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $controller = new SalonesController();
+                $id = $_GET['id'] ?? null; // El ID se pasa como un parámetro GET
+                if ($id) {
+                    $controller->obtenerPorId(id: $id);
                 } else {
                     echo json_encode(value: [
                         'status' => 'error',
-                        'message' => 'Método no permitido, se requiere POST',
+                        'message' => 'ID es requerido',
                         'data' => null
                     ]);
-                    http_response_code(response_code: 405); // 405 Method Not Allowed
+                    http_response_code(response_code: 400); // 400 Bad Request
                 }
-                break;
-                case 'usuario/actualizarclave':
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                        $controller = new UsuarioController();
-                        $controller->actualizarClave();
-                    } else {
-                        echo json_encode(value: [
-                            'status' => 'error',
-                            'message' => 'Método no permitido, se requiere POST',
-                            'data' => null
-                        ]);
-                        http_response_code(response_code: 405); // 405 Method Not Allowed
-                    }
-                    break;
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere GET',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+        case 'salones/obtenerlista':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new SalonesController();
+                $controller->obtenerListadoSalones();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'salones/agregar':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new salonesController();
+                $controller->agregarSalon();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'salones/modificar':
+            if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                $controller = new salonesController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null; // El ID se pasa como un parámetro GET
+                if ($id) {
+                    $controller->actualizarSalon(id: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere PUT',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'salones/eliminar':
+            if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                $controller = new salonesController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null;
+                if ($id) {
+                    $controller->eliminarSalon(id: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere DELETE',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+        //#enregion
 
         default:
             echo json_encode(value: ['status' => 'error', 'message' => 'Ruta no válida']);

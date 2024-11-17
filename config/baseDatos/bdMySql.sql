@@ -32,7 +32,7 @@ CREATE TABLE `reservas` (
     `Fecha` date NOT NULL, -- Fecha específica para la reserva
     `HoraInicio` time NOT NULL, -- Hora de inicio de la reserva
     `HoraFin` time NOT NULL, -- Hora de finalización de la reserva
-    `Estado` enum('D', 'A', 'C') DEFAULT 'A', -- Estado de la reserva (D = Disponible, A = Activa, C = Cancelada)
+    `Estado` enum('D', 'A', 'C') DEFAULT 'D', -- Estado de la reserva (D = Disponible, A = Activa, C = Cancelada)
     `FechaReserva` timestamp NULL DEFAULT current_timestamp() -- Fecha y hora en que se realizó la reserva
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 

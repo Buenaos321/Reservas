@@ -6,13 +6,15 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\Key;
 
-class AuthMiddleware {
+class AuthMiddleware
+{
     /**
      * Verificación de token JWT usando el middleware
      * Se encarga de verificar la validez del token proporsionado por el usuario
      * @return stdClass
      */
-    public function verificarToken() : stdClass {
+    public function verificarToken(): stdClass
+    {
         // Obtiene los encabezados de la solicitud
         $headers = getallheaders(); // Cambiado para obtener todos los encabezados
 
@@ -24,6 +26,19 @@ class AuthMiddleware {
             echo json_encode(value: [
                 'status' => 'error',
                 'message' => 'Token no proporcionado',
+                'data' => null
+            ]);
+            http_response_code(response_code: 401); // Código de respuesta 401 Unauthorized
+            exit; // Detiene la ejecución
+        }
+
+        $parts = explode(separator: ' ', string: $authHeader);
+
+        // Verifica si el encabezado tiene el formato correcto
+        if (count(value: $parts) !== 2 || $parts[0] !== 'Bearer' || empty($parts[1])) {
+            echo json_encode(value: [
+                'status' => 'error',
+                'message' => 'Token inválido o no proporcionado correctamente',
                 'data' => null
             ]);
             http_response_code(response_code: 401); // Código de respuesta 401 Unauthorized
