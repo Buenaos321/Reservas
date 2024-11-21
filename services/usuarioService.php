@@ -234,7 +234,7 @@ class UsuarioService
                     'message' => 'Error al actualizar la contraseña',
                     'data' => null
                 ];
-            }else{
+            } else {
                 return [
                     'status' => 'success',
                     'message' => 'Contraseña acttualizada con exito',
