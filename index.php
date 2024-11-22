@@ -38,6 +38,12 @@ $routes = [
     'salones/agregar' => 'controllers/salonesController.php',
     'salones/modificar' => 'controllers/salonesController.php',
     'salones/eliminar' => 'controllers/salonesController.php',
+    //Reservas
+    'reservas/obtenerlista' => 'controllers/reservasController.php',
+    'reservas/agregar' => 'controllers/reservasController.php',
+    'reservas/modificar' => 'controllers/reservasController.php',
+    'reservas/eliminar' => 'controllers/reservasController.php',
+
 ];
 
 // Obtener la ruta solicitada (ejemplo: `http://tudominio.com/index.php?route=login`)
@@ -287,6 +293,84 @@ if (array_key_exists(key: $route, array: $routes)) {
             }
             break;
         //#enregion
+        //Reservas:
+        case 'reservas/obtenerlista':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new ReservaController();
+                $controller->obtener();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'reservas/agregar':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $controller = new ReservaController();
+                $controller->crear();
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere POST',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'reservas/modificar':
+            if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+                $controller = new ReservaController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null; // El ID se pasa como un parámetro GET
+                if ($id) {
+                    $controller->actualizar(idReserva: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere PUT',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
+
+        case 'reservas/eliminar':
+            if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                $controller = new ReservaController();
+                // Leer y decodificar el JSON del cuerpo de la solicitud
+                $id = $_GET['id'] ?? null;
+                if ($id) {
+                    $controller->eliminar( idReserva: $id);
+                } else {
+                    echo json_encode(value: [
+                        'status' => 'error',
+                        'message' => 'ID es requerido',
+                        'data' => null
+                    ]);
+                    http_response_code(response_code: 400); // 400 Bad Request
+                }
+            } else {
+                echo json_encode(value: [
+                    'status' => 'error',
+                    'message' => 'Método no permitido, se requiere DELETE',
+                    'data' => null
+                ]);
+                http_response_code(response_code: 405); // 405 Method Not Allowed
+            }
+            break;
 
         default:
             echo json_encode(value: ['status' => 'error', 'message' => 'Ruta no válida']);

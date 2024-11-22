@@ -15,6 +15,21 @@ class ReservaModel
         }
     }
 
+    // Método para verificar si un salón existe por su ID
+    public function salonExiste($idSalon): bool
+    {
+        $query = "SELECT COUNT(*) as total FROM salones WHERE IdSalon = :idSalon";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idSalon', $idSalon);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return ($result['total'] > 0);
+        } else {
+            return false;
+        }
+    }
+
     // Crear una nueva reserva
     public function crearReserva($idSalon, $idUsuario, $fecha, $horaInicio, $horaFin): mixed
     {
@@ -42,7 +57,11 @@ class ReservaModel
         $stmt->bindParam(':horaInicio', $horaInicio);
         $stmt->bindParam(':horaFin', $horaFin);
 
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $this->db->lastInsertId(); // Devuelve el ID de la nueva reserva
+        } else {
+            return null;
+        }
     }
 
     // Obtener todas las reservas
@@ -64,7 +83,7 @@ class ReservaModel
         LEFT JOIN salones ON
             reservas.Idsalon = salones.Idsalon 
         LEFT JOIN usuarios ON 
-            reservas.IdUsuario = usuarios.IdUsuario ";
+            reservas.IdUsuario = usuarios.IdUsuario";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

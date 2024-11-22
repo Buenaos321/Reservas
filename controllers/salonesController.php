@@ -27,7 +27,7 @@ class SalonesController
             echo json_encode(value: [
                 'status' => 'error',
                 'message' => 'Error al obtener el usuario: ' . $e->getMessage(),
-                'data' => null
+                'e' => null
             ]);
             http_response_code(response_code: 500); // Código de respuesta 500 Internal Server Error
         }
@@ -38,7 +38,6 @@ class SalonesController
         try {
             // Verificación de token JWT usando el middleware
             $this->authMiddleware->verificarToken(); // Este método lanza una excepción si el token es inválido
-
             // Token válido, continuar con la obtención del salón
             $respuesta = $this->salonesService->obtenerListadoSalones();
             echo json_encode(value: $respuesta);
@@ -134,9 +133,9 @@ class SalonesController
     {
         try {
             $this->authMiddleware->verificarToken(); // Este método lanza una excepción si el token es inválido
-            
+
             // Validación de campos
-            if (empty($id) ) {
+            if (empty($id)) {
                 echo json_encode(value: [
                     'status' => 'error',
                     'message' => 'El campo de id es necesario para eliminar el salón',

@@ -82,27 +82,141 @@ Describe aquí los endpoints más importantes de la API, por ejemplo:
 
 ### Endpoints Principales
 
-1. **Crear Reserva**
-   - **Ruta**: `/reservas/create`
+Basado en la información proporcionada, aquí te dejo la estructura actualizada de los endpoints para manejar reservas:
+
+### Endpoints Actualizados de Reservas
+
+1. **Obtener Lista de Reservas**
+   - **Ruta**: `/reservas/obtenerlista`
    - **Método**: `POST`
-   - **Descripción**: Permite crear una nueva reserva.
-   - **Parámetros**:
-     - `fecha` (string, requerido): Fecha de la reserva.
-     - `hora_inicio` (string, requerido): Hora de inicio de la reserva.
-     - `hora_fin` (string, requerido): Hora de fin de la reserva.
-     - `espacio` (int, requerido): ID del espacio a reservar.
+   - **Descripción**: Lista todas las reservas registradas en el sistema.
+   - **Ejemplo**:
+     ```bash
+     POST http://localhost/reservas/?route=reservas/obtenerlista
+     ```
+   - **Headers**:
+     - `Content-Type`: `application/json`
+     - `Authorization`: `Bearer {TOKEN}` 
+   - **Respuesta**:
+     ```json
+     {
+       "status": "success",
+       "message": "Reservas obtenidas correctamente",
+       "data": [
+         {
+           "idReserva": 1,
+           "idSalon": 10,
+           "nombreSalon": "Sala A",
+           "capacidadSalon": 30,
+           "ubicacionSalon": "Piso 1",
+           "idUsuarioReserva": 5,
+           "fecha": "2024-11-25",
+           "horaInicio": "09:00:00",
+           "horaFin": "10:00:00",
+           "estado": "A",
+           "fechaReserva": "2024-11-20T12:00:00Z"
+         }
+       ]
+     }
+     ```
 
-2. **Consultar Reservas**
-   - **Ruta**: `/reservas`
-   - **Método**: `GET`
-   - **Descripción**: Lista todas las reservas.
+2. **Crear Reservas**
+   - **Ruta**: `/reservas/agregar`
+   - **Método**: `POST`
+   - **Descripción**: Permite crear nuevas reservas en un rango de fechas y horas, con intervalos de 1 hora.
+   - **Parámetros del Cuerpo**:
+     - `idSalon` (int, requerido): ID del salón que se quiere reservar.
+     - `idUsuario` (int, requerido): ID del usuario que realiza la reserva.
+     - `fechaInicio` (string, requerido): Fecha de inicio del rango (Formato: `YYYY-MM-DD`).
+     - `fechaFin` (string, requerido): Fecha de fin del rango (Formato: `YYYY-MM-DD`).
+     - `horaInicio` (string, requerido): Hora de inicio del rango (Formato: `HH:MM`).
+     - `horaFin` (string, requerido): Hora de fin del rango (Formato: `HH:MM`).
+   - **Ejemplo**:
+     ```bash
+     POST http://localhost/reservas/?route=reservas/agregar
+     ```
+   - **Cuerpo de la Solicitud**:
+     ```json
+     {
+       "idSalon": 1,
+       "idUsuario": 2,
+       "fechaInicio": "2024-11-21",
+       "fechaFin": "2024-11-23",
+       "horaInicio": "09:00",
+       "horaFin": "17:00"
+     }
+     ```
+   - **Headers**:
+     - `Content-Type`: `application/json`
+     - `Authorization`: `Bearer {TOKEN}` 
+   - **Respuesta**:
+     ```json
+     {
+       "status": "success",
+       "message": "Reservas creadas exitosamente.",
+       "data": null
+     }
+     ```
 
-3. **Eliminar Reserva**
-   - **Ruta**: `/reservas/delete/{id}`
+3. **Actualizar Reserva**
+   - **Ruta**: `/reservas/modificar`
+   - **Método**: `PUT`
+   - **Descripción**: Permite actualizar el estado de una reserva específica.
+   - **Parámetros del Cuerpo**:
+     - `idReserva` (int, requerido): ID de la reserva que se desea actualizar.
+     - `estado` (string, requerido): Nuevo estado de la reserva (`A` para Activa, `C` para Cancelada, etc.).
+   - **Ejemplo**:
+     ```bash
+     PUT http://localhost/reservas/?route=reservas/modificar&id=6
+     ```
+   - **Cuerpo de la Solicitud**:
+     ```json
+     {
+       "estado": "C"
+     }
+     ```
+   - **Headers**:
+     - `Content-Type`: `application/json`
+     - `Authorization`: `Bearer {TOKEN}` 
+   - **Respuesta**:
+     ```json
+     {
+       "status": "success",
+       "message": "Reserva actualizada correctamente.",
+       "data": {
+         "id": 6
+       }
+     }
+     ```
+
+4. **Eliminar Reserva**
+   - **Ruta**: `/reservas/eliminar`
    - **Método**: `DELETE`
-   - **Descripción**: Elimina una reserva por ID.
+   - **Descripción**: Elimina una reserva específica usando su ID.
+   - **Parámetros**:
+     - `id` (int, requerido): ID de la reserva a eliminar.
+   - **Ejemplo**:
+     ```bash
+     DELETE http://localhost/reservas/?route=reservas/eliminar&id=8
+     ```
+   - **Headers**:
+     - `Authorization`: `Bearer {TOKEN}` 
+   - **Respuesta**:
+     ```json
+     {
+       "status": "success",
+       "message": "Reserva eliminada correctamente.",
+       "data": {
+         "id": 8
+       }
+     }
+     ```
 
-Asegúrate de enviar los datos en el formato requerido y revisar la respuesta de la API para asegurarte de que la operación se completó correctamente.
+### Notas Importantes
+- Todos los métodos `POST`, `PUT`, y `DELETE` requieren que el cuerpo de la solicitud esté en formato JSON.
+- Asegúrate de incluir el token de autorización en los headers cuando el endpoint lo requiera.
+- En caso de errores, la respuesta del servidor incluirá un mensaje detallado en el campo `message`.
+
 
 ## Licencia
 
