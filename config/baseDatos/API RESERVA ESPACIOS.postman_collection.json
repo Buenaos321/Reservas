@@ -1,0 +1,839 @@
+{
+	"info": {
+		"_postman_id": "2e159ba3-dc91-4d2e-be6d-981d34215836",
+		"name": "API RESERVA ESPACIOS",
+		"description": "## Introducción\n\nLa API de RESERVAS es un conjunto de endpoints que permiten gestionar usuarios y sus operaciones asociadas dentro del sistema de reservas. Esta API está diseñada para facilitar la interacción entre aplicaciones y servicios, permitiendo a los desarrolladores realizar operaciones de autenticación y gestión de usuarios de manera eficiente.\n\n## Características Principales\n\n- **Autenticación:** La API permite a los usuarios iniciar sesión y obtener un token de autenticación que se utilizará en futuras solicitudes para acceder a recursos protegidos.\n    \n- **Gestión de Usuarios:** Proporciona funcionalidades para crear, obtener, actualizar y eliminar usuarios del sistema.\n    \n- **Estructura de Respuestas:** Las respuestas de la API están formateadas en JSON, proporcionando un formato uniforme y fácil de entender para los desarrolladores.\n    \n\n## Endpoints Disponibles\n\n1. **Iniciar Sesión**\n    \n    - **Método:** POST\n        \n    - **URL:** `http://localhost/RESERVAS/?route=login`\n        \n    - **Descripción:** Permite a los usuarios iniciar sesión con sus credenciales y obtener un token de acceso.\n        \n    - { \"status\": \"success\", \"message\": \"Inicio de sesión exitoso\", \"data\": { \"id\": 7, \"email\": \"[leonardo@gmail.com](https://mailto:leonardo@gmail.com)\", \"nombre\": \"Mario benitez\" }, \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\"}\n        \n2. **Obtener Usuario por ID**\n    \n    - **Método:** GET\n        \n    - **URL:** `http://localhost/RESERVAS/?route=usuario/obtener&id={id}`\n        \n    - **Descripción:** Recupera la información de un usuario específico utilizando su identificador.\n        \n    - { \"status\": \"success\", \"data\": { \"id\": 6, \"nombre\": \"Mario benitez\", \"email\": \"[leonardo1@gmail.com](https://mailto:leonardo1@gmail.com)\", \"clave\": \"123\" }}\n        \n3. **Agregar Usuario**\n    \n    - **Método:** POST\n        \n    - **URL:** `http://localhost/RESERVAS/?route=usuario/agregar`\n        \n    - **Descripción:** Crea un nuevo usuario en el sistema.\n        \n    - { \"status\": \"success\", \"message\": \"Usuario creado\", \"data\": { \"id\": \"9\" }}\n        \n4. **Actualizar Usuario**\n    \n    - **Método:** PUT\n        \n    - **URL:** `http://localhost/RESERVAS/?route=usuario/actualizar&id={id}`\n        \n    - **Descripción:** Actualiza la información de un usuario existente.\n        \n    - { \"status\": \"success\", \"message\": \"Usuario actualizado\", \"data\": null}\n        \n5. **Eliminar Usuario**\n    \n    - **Método:** DELETE\n        \n    - **URL:** `http://localhost/RESERVAS/?route=usuario/eliminar&id={id}`\n        \n    - **Descripción:** Elimina un usuario del sistema utilizando su identificador único.\n        \n    - { \"status\": \"success\", \"message\": \"Usuario eliminado\", \"data\": \"8\"}\n        \n\n## Seguridad\n\nTodas las solicitudes a los endpoints que requieren autenticación deben incluir un token válido en la cabecera. El token se obtiene al iniciar sesión y tiene una duración de 24 horas.\n\n## Conclusión\n\nLa API de RESERVAS proporciona una interfaz robusta para la gestión de usuarios, facilitando su integración en aplicaciones y servicios que requieren acceso a estas funcionalidades. Se recomienda revisar cada uno de los endpoints para aprovechar al máximo las capacidades de la API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7770507"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Obtener Usuario por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=usuario/obtenerporid&id=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "usuario/obtenerporid"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite obtener la información de un usuario específico mediante una solicitud **GET** a la siguiente URL:  \n`http://localhost/RESERVAS/?route=usuario/obtenerPorId&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede recuperar los detalles de un usuario específico proporcionado su identificador único (ID). Este ID debe ser pasado como parámetro de consulta en la URL.\n\n#### Parámetros\n\n- `id`: (Requerido) El ID del usuario que se desea obtener.\n    \n\n#### Ejemplo de Solicitud\n\n``` http\nGET http://localhost/RESERVAS/?route=usuario/obtenerPorId&id=6\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y los datos del usuario solicitado. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"data\": {\n        \"id\": 6,\n        \"nombre\": \"Mario Benitez\",\n        \"email\": \"leonardo1@gmail.com\",\n        \"clave\": \"123\"\n    }\n}\n\n ```\n\n- `status`: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- `data`: Contiene un objeto con la información del usuario:\n    \n    - `id`: El ID del usuario.\n        \n    - `nombre`: El nombre del usuario.\n        \n    - `email`: La dirección de correo electrónico del usuario.\n        \n    - `clave`: La contraseña del usuario (puede que no sea recomendable incluirla en la respuesta por razones de seguridad).\n        \n\n#### Notas\n\nAsegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido. Si el ID no corresponde a un usuario existente, se devolverá un mensaje de error apropiado.\n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "obtener listado  usuarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=usuario/obtenerlista",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "usuario/obtenerlista"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite obtener un listado de todos los usuarios registrados mediante una solicitud POST a la siguiente URL:\n\n**URL:**\n\n`http://localhost/RESERVAS/?route=usuario/listado`\n\n### Descripción\n\nAl utilizar este endpoint, se pueden recuperar los detalles de todos los usuarios registrados en el sistema. La respuesta contendrá un arreglo de objetos que representan a cada usuario.\n\n### Ejemplo de Solicitud\n\n**Método:**\n\nPOST\n\n**URL:**\n\n`http://localhost/RESERVAS/?route=usuario/listado`\n\n### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y un listado de usuarios. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"nombre\": \"Juan Pérez\",\n            \"email\": \"juan.perez@gmail.com\",\n            \"clave\": \"abc123\"\n        },\n        {\n            \"id\": 2,\n            \"nombre\": \"Ana Gómez\",\n            \"email\": \"ana.gomez@gmail.com\",\n            \"clave\": \"def456\"\n        }\n    ]\n}\n\n ```\n\n- **status:** Indica el estado de la solicitud (en este caso, \"success\").\n    \n- **data:** Contiene un arreglo de objetos, cada uno representando a un usuario:\n    \n    - **id:** El ID del usuario.\n        \n    - **nombre:** El nombre del usuario.\n        \n    - **email:** La dirección de correo electrónico del usuario.\n        \n    - **clave:** La contraseña del usuario (puede que no sea recomendable incluirla en la respuesta por razones de seguridad).\n        \n\n### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- Este endpoint es útil para obtener una visión general de todos los usuarios registrados en el sistema, permitiendo la gestión y visualización de información en la aplicación."
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar Usuario",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"leonard2o\",\r\n    \"email\": \"ultimo1@gmail.com\",\r\n    \"clave\": \"123\",\r\n    \"rol\":\"Administrador\",\r\n    \"tipoDocumento\":\"Cédula de Ciudadanía\",\r\n    \"numeroDocumento\":\"RE4543JXJ3836\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=usuario/agregar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "usuario/agregar"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite crear un nuevo usuario mediante una solicitud **POST** a la siguiente URL:  \n`http://localhost/RESERVAS/?route=usuario/agregar`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede registrar un nuevo usuario en el sistema. La información del usuario debe ser proporcionada en el cuerpo de la solicitud en formato JSON.\n\n#### Cuerpo de la Solicitud\n\nEl cuerpo de la solicitud debe incluir los siguientes campos:\n\n- `nombre`: (Requerido) El nombre completo del usuario.\n    \n- `email`: (Requerido) La dirección de correo electrónico del usuario.\n    \n- `clave`: (Requerido) La contraseña que se utilizará para la cuenta del usuario.\n    \n\n#### Ejemplo de Solicitud\n\n``` http\nPOST http://localhost/RESERVAS/?route=usuario/agregar\nContent-Type: application/json\n{\n    \"nombre\": \"Mario Benitez\",\n    \"email\": \"leonardo21@gmail.com\",\n    \"clave\": \"123\"\n}\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que indica el estado de la operación y los datos del nuevo usuario creado. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"message\": \"Usuario creado\",\n    \"data\": {\n        \"id\": \"9\"\n    }\n}\n\n ```\n\n- `status`: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- `message`: Proporciona un mensaje informativo sobre la operación realizada (en este caso, \"Usuario creado\").\n    \n- `data`: Contiene un objeto con el ID del nuevo usuario:\n    \n    - `id`: El identificador único asignado al nuevo usuario en el sistema.\n        \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Usuario",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"leonardo\",\r\n    \"email\": \"ultimo@gmail.com\",\r\n    \"rol\":\"\",\r\n    \"tipoDocumento\":\"\",\r\n    \"numeroDocumento\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=usuario/modificar&id=8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "usuario/modificar"
+								},
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite actualizar la información de un usuario existente mediante una solicitud **PUT** a la siguiente URL:  \n`http://localhost/RESERVAS/?route=usuario/actualizar&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede modificar la información de un usuario en el sistema. Es necesario proporcionar el identificador único del usuario a través de la URL, así como los nuevos datos en el cuerpo de la solicitud en formato JSON.\n\n#### Parámetros de Consulta\n\n- `id`: (Requerido) El identificador único del usuario que se desea actualizar.\n    \n\n#### Cuerpo de la Solicitud\n\nEl cuerpo de la solicitud puede incluir los siguientes campos (solo se actualizarán los campos que se proporcionen):\n\n- `nombre`: (Opcional) El nuevo nombre completo del usuario.\n    \n- `email`: (Opcional) La nueva dirección de correo electrónico del usuario.\n    \n- `clave`: (Opcional) La nueva contraseña que se utilizará para la cuenta del usuario.\n    \n\n#### Ejemplo de Solicitud\n\n``` http\nPUT http://localhost/RESERVAS/?route=usuario/actualizar&id=9\nContent-Type: application/json\n{\n    \"nombre\": \"Mario Benitez Actualizado\",\n    \"email\": \"leonardo21actualizado@gmail.com\"\n}\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que indica el estado de la operación. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"message\": \"Usuario actualizado\",\n    \"data\": null\n}\n\n ```\n\n- `status`: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- `message`: Proporciona un mensaje informativo sobre la operación realizada (en este caso, \"Usuario actualizado\").\n    \n- `data`: Se devuelve como `null`, ya que no se proporciona información adicional en la respuesta tras una actualización exitosa.\n    \n\n#### Notas\n\nAsegúrese de validar los datos enviados en el cuerpo de la solicitud antes de realizarla. Si la actualización del usuario falla, se devolverá un mensaje de error con detalles sobre lo que salió mal."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Usuario",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=usuario/eliminar&id=8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "usuario/eliminar"
+								},
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite eliminar un usuario existente mediante una solicitud **DELETE** a la siguiente URL:  \n`http://localhost/RESERVAS/?route=usuario/eliminar&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede eliminar un usuario del sistema utilizando su identificador único. Se debe proporcionar el identificador del usuario a través de la URL.\n\n#### Parámetros de Consulta\n\n- `id`: (Requerido) El identificador único del usuario que se desea eliminar.\n    \n\n#### Ejemplo de Solicitud\n\n``` http\nDELETE http://localhost/RESERVAS/?route=usuario/eliminar&id=8\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que indica el estado de la operación. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"message\": \"Usuario eliminado\",\n    \"data\": \"8\"\n}\n\n ```\n\n- `status`: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- `message`: Proporciona un mensaje informativo sobre la operación realizada (en este caso, \"Usuario eliminado\").\n    \n- `data`: Devuelve el identificador del usuario que fue eliminado, confirmando así que la operación se completó correctamente.\n    \n\n#### Notas\n\nAsegúrese de que el usuario que intenta eliminar existe en el sistema antes de hacer la solicitud. Si la eliminación del usuario falla, se devolverá un mensaje de error con detalles sobre lo que salió mal."
+					},
+					"response": []
+				}
+			],
+			"description": "### Introducción a la Gestión de Usuarios\n\nEste apartado detalla el consumo de los endpoints usados para la gestión de usuarios dentro del sistema de reservas. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar) sobre los usuarios, proporcionando un control completo sobre la información y los permisos de cada usuario registrado en el sistema. A través de estos endpoints, es posible añadir nuevos usuarios, modificar sus datos personales, asignar roles (como Administrador o Usuario estándar), consultar la lista completa de usuarios registrados, o eliminar aquellos que ya no requieran acceso al sistema. La gestión de usuarios es fundamental, ya que cada reserva está asociada a un usuario específico, lo que permite un seguimiento detallado y personalizado de las reservas realizadas, asegurando que solo usuarios autenticados puedan acceder y realizar las operaciones correspondientes."
+		},
+		{
+			"name": "Salones",
+			"item": [
+				{
+					"name": "Obtener salón por Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=salones/obtenerporid&id=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "salones/obtenerporid"
+								},
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite obtener la información de un salón específico mediante una solicitud GET a la siguiente URL:  \n`http://localhost/reservas/?route=salones/obtenerporid&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se pueden recuperar los detalles de un salón específico proporcionado su identificador único (ID). Este ID debe ser pasado como parámetro de consulta en la URL.\n\n#### Parámetros\n\n- **id**: (Requerido) El ID del salón que se desea obtener.\n    \n\n#### Ejemplo de Solicitud\n\n```\nplaintextCopiar códigoGET http://localhost/reservas/?route=salones/obtenerporid&id=1\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y los datos del salón solicitado. La estructura de la respuesta es la siguiente:\n\n```\njsonCopiar código{\n    \"status\": \"success\",\n    \"data\": {\n        \"id\": 1,\n        \"nombre\": \"Salón Principal\",\n        \"ubicacion\": \"Edificio A, Piso 3\",\n        \"recursos\": \"Proyector, Aire acondicionado, Pizarra\",\n        \"estado\": \"Disponible\"\n    }\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- **data**: Contiene un objeto con la información del salón:\n    \n    - **id**: El ID del salón.\n        \n    - **nombre**: El nombre del salón.\n        \n    - **ubicacion**: La ubicación física del salón.\n        \n    - **recursos**: Los recursos disponibles en el salón (pueden ser equipos, mobiliario, etc.).\n        \n    - **estado**: El estado del salón (por ejemplo, \"Disponible\" o \"Bloqueado\").\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- Si el ID no corresponde a un salón existente, se devolverá un mensaje de error apropiado indicando que no se encontró el salón solicitado.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Listado salones",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=salones/obtenerlista",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "salones/obtenerlista"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite obtener un listado completo de los salones disponibles mediante una solicitud GET a la siguiente URL:  \n`http://localhost/reservas/?route=salones/obtenerlista`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede recuperar la lista de todos los salones registrados en el sistema, incluyendo detalles como nombre, ubicación, recursos disponibles y estado. Este endpoint es útil para visualizar todos los espacios disponibles y sus características.\n\n#### Parámetros\n\nEste endpoint no requiere parámetros adicionales. Basta con realizar la solicitud GET a la URL especificada.\n\n#### Ejemplo de Solicitud\n\n``` plaintext\nGET http://localhost/reservas/?route=salones/obtenerlista\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y una lista de salones. La estructura de la respuesta es la siguiente:\n\n``` json\n{\n    \"status\": \"success\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"nombre\": \"Salón Principal\",\n            \"ubicacion\": \"Edificio A, Piso 3\",\n            \"recursos\": \"Proyector, Aire acondicionado, Pizarra\",\n            \"estado\": \"Disponible\"\n        },\n        {\n            \"id\": 2,\n            \"nombre\": \"Salón de Reuniones\",\n            \"ubicacion\": \"Edificio B, Piso 1\",\n            \"recursos\": \"Televisor, Pizarra\",\n            \"estado\": \"Bloqueado\"\n        },\n        {\n            \"id\": 3,\n            \"nombre\": \"Auditorio\",\n            \"ubicacion\": \"Edificio C, Planta Baja\",\n            \"recursos\": \"Proyector, Sistema de Sonido\",\n            \"estado\": \"Disponible\"\n        }\n    ]\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud (en este caso, \"success\").\n    \n- **data**: Contiene un array de objetos, cada uno representando un salón en el sistema:  \n    \n    - **id**: El ID del salón.\n        \n    - **nombre**: El nombre del salón.\n        \n    - **ubicacion**: La ubicación física del salón.\n        \n    - **recursos**: Los recursos disponibles en el salón (equipos, mobiliario, etc.).\n        \n    - **estado**: El estado del salón (por ejemplo, \"Disponible\" o \"Bloqueado\").\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- En caso de que no existan salones registrados, se devolverá una lista vacía en la propiedad `data`.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar salón",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Salon3\",\r\n    \"ubicacion\": \"sasdfd\",\r\n    \"recursos\": \"bbgfbgf\",\r\n    \"estado\":\"A\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=salones/agregar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "salones/agregar"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite agregar un nuevo salón mediante una solicitud `POST` a la siguiente URL:  \n`http://localhost/reservas/?route=salones/agregar`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede registrar un nuevo salón en el sistema. La solicitud debe incluir los detalles del salón, como su nombre, ubicación, recursos disponibles y estado.\n\n#### Parámetros en el Cuerpo de la Solicitud\n\nLa solicitud debe enviarse en formato JSON en el cuerpo (`body`) con las siguientes propiedades:\n\n- **nombre** (string, requerido): El nombre del salón.\n    \n- **ubicacion** (string, requerido): La ubicación física del salón.\n    \n- **recursos** (string, opcional): Los recursos disponibles en el salón (equipos, mobiliario, etc.).\n    \n- **estado** (string, requerido): El estado inicial del salón. Puede tener los siguientes valores:\n    \n    - `\"D\"`: Disponible\n        \n    - `\"B\"`: Bloqueado\n        \n\n#### Ejemplo de Cuerpo de Solicitud\n\n```\n {\n    \"nombre\": \"Salon3\",\n    \"ubicacion\": \"sasdfd\",\n    \"recursos\": \"bbgfbgf\",\n    \"estado\": \"D\"\n}\n\n ```\n\n#### Ejemplo de Solicitud\n\n```\nPOST http://localhost/reservas/?route=salones/agregar\nContent-Type: application/json\n{\n    \"nombre\": \"Salon3\",\n    \"ubicacion\": \"sasdfd\",\n    \"recursos\": \"bbgfbgf\",\n    \"estado\": \"D\"\n}\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y los detalles del salón recién creado. La estructura de la respuesta es la siguiente:\n\n```\n{\n    \"status\": \"success\",\n    \"message\": \"Salón creado\",\n    \"data\": {\n        \"id\": 4\n    }\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud (en este caso, \"success\" si el salón fue agregado correctamente).\n    \n- **message**: Mensaje que describe la operación realizada.\n    \n- **data**: Contiene un objeto con el `id` del nuevo salón creado:\n    \n    - **id**: El ID único asignado al salón recién creado.\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- Si ocurre algún error durante la creación del salón (por ejemplo, campos faltantes o formato incorrecto), la respuesta devolverá un estado `\"error\"` junto con un mensaje de error específico\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar salón",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Salon30\",\r\n    \"ubicacion\": \"sasdfd\",\r\n    \"recursos\": \"bbgfbgf\",\r\n    \"estado\":\"A\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=salones/modificar&id=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "salones/modificar"
+								},
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite modificar la información de un salón específico mediante una solicitud `PUT` a la siguiente URL:  \n`http://localhost/reservas/?route=salones/modificar&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se pueden actualizar los detalles de un salón existente proporcionado su identificador único (ID). El ID debe ser pasado como un parámetro en la URL.\n\n#### Parámetros en la URL\n\n- **id** (requerido): El ID del salón que se desea modificar.\n    \n\n#### Parámetros en el Cuerpo de la Solicitud\n\nLa solicitud debe enviarse en formato JSON en el cuerpo (`body`) con las siguientes propiedades (pueden enviarse todos o solo algunos de los campos a modificar):\n\n- **nombre** (string, opcional): El nombre del salón.\n    \n- **ubicacion** (string, opcional): La ubicación física del salón.\n    \n- **recursos** (string, opcional): Los recursos disponibles en el salón (equipos, mobiliario, etc.).\n    \n- **estado** (string, opcional): El estado del salón. Puede tener los siguientes valores:  \n    \n    - `\"D\"`: Disponible\n        \n    - `\"B\"`: Bloqueado\n        \n\n#### Ejemplo de Cuerpo de Solicitud\n\n``` json\n{\n    \"nombre\": \"Salon30\",\n    \"ubicacion\": \"sasdfd\",\n    \"recursos\": \"bbgfbgf\",\n    \"estado\": \"D\"\n}\n\n ```\n\n#### Ejemplo de Solicitud\n\n``` plaintext\nPUT http://localhost/reservas/?route=salones/modificar&id=3\nContent-Type: application/json\n{\n    \"nombre\": \"Salon30\",\n    \"ubicacion\": \"sasdfd\",\n    \"recursos\": \"bbgfbgf\",\n    \"estado\": \"D\"\n}\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y los detalles del salón modificado. La estructura de la respuesta es la siguiente:\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Salón actualizado correctamente\",\n    \"data\": {\n        \"id\": 3\n    }\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud (en este caso, \"success\" si el salón fue modificado correctamente).\n    \n- **message**: Mensaje que describe la operación realizada.\n    \n- **data**: Contiene un objeto con el `id` del salón modificado:  \n    \n    - **id**: El ID único del salón que fue actualizado.\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- Si ocurre algún error durante la modificación del salón (por ejemplo, campos faltantes o formato incorrecto), la respuesta devolverá un estado `\"error\"` junto con un mensaje de error específico.\n    \n- Si el ID no corresponde a un salón existente, se devolverá un mensaje de error adecuado.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Salón",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=salones/eliminar&id=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "salones/eliminar"
+								},
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite eliminar un salón específico mediante una solicitud `DELETE` a la siguiente URL:  \n`http://localhost/reservas/?route=salones/eliminar&id={id}`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede eliminar un salón existente utilizando su identificador único (ID). El ID del salón debe ser pasado como parámetro en la URL.\n\n#### Parámetros en la URL\n\n- **id** (requerido): El ID del salón que se desea eliminar.\n    \n\n#### Ejemplo de Solicitud\n\n``` plaintext\nDELETE http://localhost/reservas/?route=salones/eliminar&id=3\nContent-Type: application/json\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y el ID del salón eliminado. La estructura de la respuesta es la siguiente:\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Salón eliminado correctamente\",\n    \"data\": {\n        \"id\": 3\n    }\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud. En este caso, `\"success\"` si la eliminación fue exitosa.\n    \n- **message**: Mensaje que describe el resultado de la operación.\n    \n- **data**: Contiene un objeto con el `id` del salón eliminado:  \n    \n    - **id**: El ID único del salón que fue eliminado.\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- Si el ID proporcionado no corresponde a un salón existente, se devolverá un mensaje de error indicando que el salón no se encontró.\n    \n- Si ocurre un error durante la eliminación (por ejemplo, debido a restricciones o dependencias), la respuesta devolverá un estado `\"error\"` con un mensaje de error específico."
+					},
+					"response": []
+				}
+			],
+			"description": "### Introducción a la Gestión de Salones\n\nEste apartado detalla el consumo de los endpoints usados para la gestión de los salones, los cuales están destinados a organizar y administrar los espacios disponibles para realizar reservas. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar) sobre los salones, facilitando el control sobre la disponibilidad, ubicación, recursos asociados y estado general de cada salón. A través de estos endpoints, los usuarios pueden añadir nuevos salones, modificar la información existente, listar los espacios disponibles, o desactivar aquellos que no se encuentren en condiciones de uso. Estos salones son esenciales, ya que son los espacios a los que se asignarán las reservas, definiendo los detalles específicos de cada evento o actividad planificada.",
+			"auth": {
+				"type": "bearer"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "Obtener Listado reservas",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=reservas/obtenerlista",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "reservas/obtenerlista"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite obtener un listado completo de todas las reservas mediante una solicitud `POST` a la siguiente URL:  \n`http://localhost/reservas/?route=reservas/obtenerlista`\n\n#### Descripción\n\nAl utilizar este endpoint, se puede recuperar una lista de todas las reservas registradas en el sistema. La respuesta incluirá detalles sobre cada reserva, como el salón reservado, el usuario que realizó la reserva, la fecha, la hora, y el estado de la misma.\n\n#### Parámetros en el Cuerpo de la Solicitud\n\nEste endpoint no requiere parámetros en el cuerpo de la solicitud, ya que recupera todas las reservas disponibles en el sistema.\n\n#### Ejemplo de Solicitud\n\n``` plaintext\nPOST http://localhost/reservas/?route=reservas/obtenerlista\nContent-Type: application/json\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y la lista de reservas obtenidas. La estructura de la respuesta es la siguiente:\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Reservas obtenidas correctamente\",\n    \"data\": [\n        {\n            \"idReserva\": 1,\n            \"idSalon\": 2,\n            \"nombreSalon\": \"Sala de Conferencias A\",\n            \"capacidadSalon\": 50,\n            \"ubicacionSalon\": \"Edificio Principal, 2do Piso\",\n            \"idUsuarioReserva\": 5,\n            \"fecha\": \"2024-11-25\",\n            \"horaInicio\": \"10:00:00\",\n            \"horaFin\": \"11:00:00\",\n            \"estado\": \"Activa\",\n            \"fechaReserva\": \"2024-11-20 12:30:00\"\n        },\n        {\n            \"idReserva\": 2,\n            \"idSalon\": 3,\n            \"nombreSalon\": \"Sala de Reuniones B\",\n            \"capacidadSalon\": 20,\n            \"ubicacionSalon\": \"Edificio Secundario, 1er Piso\",\n            \"idUsuarioReserva\": 7,\n            \"fecha\": \"2024-11-26\",\n            \"horaInicio\": \"09:00:00\",\n            \"horaFin\": \"10:00:00\",\n            \"estado\": \"Cancelada\",\n            \"fechaReserva\": \"2024-11-21 14:00:00\"\n        }\n    ]\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud. En este caso, `\"success\"` si la operación fue exitosa.\n    \n- **message**: Mensaje que describe el resultado de la operación.\n    \n- **data**: Contiene un array con las reservas obtenidas, cada una con la siguiente estructura:  \n    \n    - **idReserva**: ID único de la reserva.\n        \n    - **idSalon**: ID del salón reservado.\n        \n    - **nombreSalon**: Nombre del salón reservado.\n        \n    - **capacidadSalon**: Capacidad del salón (número de personas).\n        \n    - **ubicacionSalon**: Ubicación física del salón.\n        \n    - **idUsuarioReserva**: ID del usuario que realizó la reserva.\n        \n    - **fecha**: Fecha específica de la reserva.\n        \n    - **horaInicio**: Hora de inicio de la reserva.\n        \n    - **horaFin**: Hora de finalización de la reserva.\n        \n    - **estado**: Estado de la reserva (puede ser `\"Activa\"` o `\"Cancelada\"`).\n        \n    - **fechaReserva**: Fecha y hora en la que se realizó la reserva.\n        \n\n#### Notas\n\n- Asegúrese de que la solicitud contenga un token de autenticación válido si el endpoint está protegido.\n    \n- La lista de reservas mostrará todas las reservas disponibles en el sistema, sin filtros aplicados. Puede aplicar filtros adicionales según las necesidades implementando otros parámetros opcionales en el backend.\n    \n- En caso de un error al obtener las reservas, la respuesta devolverá un estado `\"error\"` con un mensaje específico sobre el problema.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar reserva",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idSalon\": 1,\r\n  \"idUsuario\": 2,\r\n  \"fechaInicio\": \"2024-11-21\",\r\n  \"fechaFin\": \"2024-11-22\",\r\n  \"horaInicio\": \"09:00\",\r\n  \"horaFin\": \"17:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=reservas/agregar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "reservas/agregar"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite agregar múltiples reservas en un rango de fechas y horas mediante una solicitud `POST` a la siguiente URL:  \n`http://localhost/reservas/?route=reservas/agregar`\n\n#### Descripción\n\nEste endpoint permite crear múltiples reservas para un salón en un rango específico de fechas y horas, usando intervalos de 1 hora. Esto es útil para reservas recurrentes dentro de un horario y fechas definidas. El cuerpo de la solicitud debe enviarse en formato JSON.\n\n#### Parámetros en el Cuerpo de la Solicitud\n\n- **idSalon** (int, requerido): ID del salón a reservar.\n    \n- **idUsuario** (int, requerido): ID del usuario que realiza la reserva.\n    \n- **fechaInicio** (string, requerido): Fecha de inicio del rango de reservas en formato `YYYY-MM-DD`.\n    \n- **fechaFin** (string, requerido): Fecha de finalización del rango de reservas en formato `YYYY-MM-DD`.\n    \n- **horaInicio** (string, requerido): Hora de inicio de las reservas en formato `HH:MM`.\n    \n- **horaFin** (string, requerido): Hora de finalización de las reservas en formato `HH:MM`.\n    \n\n#### Ejemplo de Cuerpo de Solicitud\n\n``` json\n{\n  \"idSalon\": 1,\n  \"idUsuario\": 2,\n  \"fechaInicio\": \"2024-11-21\",\n  \"fechaFin\": \"2024-11-23\",\n  \"horaInicio\": \"09:00\",\n  \"horaFin\": \"17:00\"\n}\n\n ```\n\n#### Ejemplo de Solicitud\n\n``` plaintext\nPOST http://localhost/reservas/?route=reservas/agregar\nContent-Type: application/json\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y un mensaje sobre el resultado. La estructura de la respuesta es la siguiente:\n\n##### Ejemplo de Respuesta Exitosa\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Reservas creadas exitosamente.\",\n    \"data\": null\n}\n\n ```\n\n##### Ejemplo de Respuesta con Error\n\n``` json\n{\n    \"status\": \"error\",\n    \"message\": \"Error al crear la reserva para la fecha 2024-11-21 y hora 09:00\",\n    \"data\": null\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud, que puede ser `\"success\"` o `\"error\"`.\n    \n- **message**: Mensaje que describe el resultado de la operación.\n    \n- **data**: En este caso, es `null` ya que no se devuelve información adicional después de la creación.\n    \n\n#### Notas\n\n- Asegúrese de que el salón especificado existe antes de realizar la solicitud.\n    \n- Las reservas se crearán en intervalos de 1 hora en el rango de fechas y horas especificado. Por ejemplo, si la solicitud tiene `horaInicio` de `\"09:00\"` y `horaFin` de `\"17:00\"`, se crearán reservas de 09:00-10:00, 10:00-11:00, etc.\n    \n- En caso de que ocurra un error al crear una de las reservas, el proceso se detendrá y se devolverá un mensaje indicando la fecha y hora en la que falló la operación.\n    \n- Si el token de autenticación es necesario, asegúrese de enviarlo en los encabezados de la solicitud para evitar errores de autorización.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar reserva",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"estado\": \"C\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=reservas/modificar&id=49",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "reservas/modificar"
+								},
+								{
+									"key": "id",
+									"value": "49"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite modificar el estado de una reserva específica mediante una solicitud `PUT` a la siguiente URL:  \n`http://localhost/reservas/?route=reservas/modificar&id={id}`\n\n#### Descripción\n\nEste endpoint permite actualizar el estado de una reserva existente utilizando su identificador único (ID). El `ID` de la reserva debe pasarse como parámetro de consulta en la URL, mientras que el cuerpo de la solicitud contiene la información que se desea modificar. En este caso, se permite modificar el estado de la reserva.\n\n#### Parámetros en la Solicitud\n\n- **id** (requerido, en URL): El ID de la reserva que se desea modificar.\n    \n- **estado** (string, requerido, en el cuerpo): El nuevo estado para la reserva. Las opciones son:  \n    \n    - `\"D\"`: Disponible.\n        \n    - `\"A\"`: Activa.\n        \n    - `\"C\"`: Cancelada.\n        \n\n#### Ejemplo de Cuerpo de Solicitud\n\n``` json\n{\n  \"estado\": \"C\"\n}\n\n ```\n\n#### Ejemplo de Solicitud\n\n``` plaintext\nPUT http://localhost/reservas/?route=reservas/modificar&id=49\nContent-Type: application/json\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y un mensaje sobre el resultado. La estructura de la respuesta es la siguiente:\n\n##### Ejemplo de Respuesta Exitosa\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Reserva actualizada correctamente.\",\n    \"data\": {\n        \"id\": 49\n    }\n}\n\n ```\n\n##### Ejemplo de Respuesta con Error\n\n``` json\n{\n    \"status\": \"error\",\n    \"message\": \"Error al actualizar la reserva.\",\n    \"data\": null\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud, que puede ser `\"success\"` o `\"error\"`.\n    \n- **message**: Mensaje que describe el resultado de la operación.\n    \n- **data**: Contiene el `ID` de la reserva modificada en caso de éxito, o `null` en caso de error.\n    \n\n#### Notas\n\n- Asegúrese de que la reserva especificada por el `ID` existe antes de intentar modificarla.\n    \n- El `estado` de la reserva debe ser uno de los valores permitidos (`\"D\"`, `\"A\"`, `\"C\"`).\n    \n- Si el token de autenticación es necesario, asegúrese de enviarlo en los encabezados de la solicitud para evitar errores de autorización.\n    \n\n---"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar reserva",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/reservas/?route=reservas/eliminar&id=72",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"reservas",
+								""
+							],
+							"query": [
+								{
+									"key": "route",
+									"value": "reservas/eliminar"
+								},
+								{
+									"key": "id",
+									"value": "72"
+								}
+							]
+						},
+						"description": "Este endpoint de la API permite eliminar una reserva específica mediante una solicitud `DELETE` a la siguiente URL:  \n`http://localhost/reservas/?route=reservas/eliminar&id={id}`\n\n#### Descripción\n\nEste endpoint permite eliminar una reserva existente utilizando su identificador único (ID). El `ID` de la reserva que se desea eliminar debe pasarse como parámetro de consulta en la URL.\n\n#### Parámetros en la Solicitud\n\n- **id** (requerido, en URL): El ID de la reserva que se desea eliminar.\n    \n\n#### Ejemplo de Solicitud\n\n``` plaintext\nDELETE http://localhost/reservas/?route=reservas/eliminar&id=72\nContent-Type: application/json\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud será un objeto JSON que contiene el estado de la operación y un mensaje sobre el resultado. La estructura de la respuesta es la siguiente:\n\n##### Ejemplo de Respuesta Exitosa\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Reserva eliminada correctamente.\",\n    \"data\": {\n        \"id\": 72\n    }\n}\n\n ```\n\n##### Ejemplo de Respuesta con Error\n\n``` json\n{\n    \"status\": \"error\",\n    \"message\": \"Error al eliminar la reserva.\",\n    \"data\": null\n}\n\n ```\n\n- **status**: Indica el estado de la solicitud, que puede ser `\"success\"` o `\"error\"`.\n    \n- **message**: Mensaje que describe el resultado de la operación.\n    \n- **data**: Contiene el `ID` de la reserva eliminada en caso de éxito, o `null` en caso de error.\n    \n\n#### Notas\n\n- Asegúrese de que la reserva especificada por el `ID` existe antes de intentar eliminarla.\n    \n- Si el token de autenticación es necesario, asegúrese de enviarlo en los encabezados de la solicitud para evitar errores de autorización.\n    \n- Este endpoint utiliza el método `DELETE`, por lo que asegúrese de que el servidor esté configurado correctamente para aceptar este tipo de solicitudes."
+					},
+					"response": []
+				}
+			],
+			"description": "### Introducción a la Gestión de Reservas\n\nEste apartado detalla el consumo de los endpoints utilizados para la gestión de reservas en el sistema. Los endpoints permiten crear, consultar, modificar y eliminar reservas de salones, asegurando que los usuarios puedan gestionar eficazmente la utilización de los espacios disponibles.\n\nLa API de gestión de reservas permite a los usuarios realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar) sobre las reservas, facilitando el control de las fechas, horas y usuarios que han reservado los salones. Estas reservas son fundamentales para organizar eventos y actividades dentro de los salones, asegurando que no haya solapamientos y optimizando la utilización de los espacios.\n\nA través de estos endpoints, se pueden gestionar los siguientes aspectos de las reservas:\n\n1. **Crear Reservas**: Permite realizar nuevas reservas para un salón, especificando la fecha, las horas de inicio y fin, y el usuario que realiza la reserva.\n    \n2. **Consultar Reservas**: Permite obtener un listado de todas las reservas realizadas, con detalles como la fecha, la hora y el salón reservado.\n    \n3. **Modificar Reservas**: Permite cambiar el estado de una reserva, por ejemplo, marcarla como cancelada.\n    \n4. **Eliminar Reservas**: Permite eliminar una reserva existente, liberando así el salón para otros usuarios.\n    \n\nEstos endpoints aseguran que la administración de las reservas sea flexible y eficiente, brindando a los administradores y usuarios las herramientas necesarias para gestionar los salones y sus respectivas reservas de manera efectiva.",
+			"auth": {
+				"type": "bearer"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Actualizar Contraseña",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idUsuario\": \"RE4543JXJ3836\",//Puede ser el numero de Identificacion o la contraseña\r\n    \"claveAnterior\": \"321\",\r\n    \"nuevaClave\": \"456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/reservas/?route=usuario/actualizarclave",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"reservas",
+						""
+					],
+					"query": [
+						{
+							"key": "route",
+							"value": "usuario/actualizarclave"
+						}
+					]
+				},
+				"description": "### Endpoint de Actualizacion de contraseña\n\nStartFragment\n\n**Descripción**: Permite a los usuarios actualizar su contraseña actual por una nueva. Para realizar esta acción, el usuario debe proporcionar su identificador de usuario (puede ser su correo electrónico o número de documento), la contraseña actual, y la nueva contraseña.\n\n### **Parámetros de la Solicitud**\n\n#### **Body (JSON)**\n\nEl cuerpo de la solicitud debe estar en formato `JSON`. El contenido esperado es:\n\n```\njsonCopiar código{\n    \"idUsuario\": \"usuario@example.com\",  // Identificador del usuario (correo electrónico o número de documento)\n    \"claveAnterior\": \"claveActual\",      // La contraseña actual del usuario\n    \"nuevaClave\": \"nuevaContraseñaSegura\" // La nueva contraseña que se desea establecer\n}\n\n ```\n\n**Ejemplo del cuerpo de la solicitud**:\n\n```\njsonCopiar código{\n    \"idUsuario\": \"usuario@example.com\",\n    \"claveAnterior\": \"claveActual\",\n    \"nuevaClave\": \"nuevaContraseñaSegura\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Almacenar el token en el entorno\r",
+							"const jsonData = pm.response.json();\r",
+							"pm.environment.set(\"TOKEN\", jsonData.token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idUsuario\": \"RE4543JXJ3836\",\r\n    \"clave\": \"456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/reservas/?route=login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"reservas",
+						""
+					],
+					"query": [
+						{
+							"key": "route",
+							"value": "login"
+						}
+					]
+				},
+				"description": "### Endpoint de Inicio de Sesión\n\nEste endpoint de la API permite a los usuarios iniciar sesión mediante una solicitud **POST** a la siguiente URL:  \n`http://localhost/RESERVAS/?route=login`\n\n#### Descripción\n\nAl utilizar este endpoint, los usuarios pueden autenticarse con sus credenciales. Para ello, el cuerpo de la solicitud debe estar en formato JSON sin procesar e incluir las siguientes propiedades:\n\n- `email`: El correo electrónico del usuario.\n    \n- `clave`: La contraseña del usuario.\n    \n\n#### Ejemplo de Cuerpo de Solicitud\n\n``` json\n{\n    \"idUsuario\": \"usuario@example.com\",\n    \"clave\": \"contraseñaSegura\"\n}\n\n ```\n\n#### Respuesta\n\nLa respuesta a esta solicitud se documentará como un esquema JSON que incluirá las propiedades y tipos de datos del objeto de respuesta que se devuelve tras un inicio de sesión exitoso. La estructura de la respuesta es la siguiente:\n\n``` json\n{\n    \"status\": \"success\",\n    \"message\": \"Inicio de sesión exitoso\",\n    \"data\": {\n        \"id\": 1,\n        \"email\": \"usuario@example.com\",\n        \"nombre\": \"Usuario ejemplo\",\n        \"rol\":\"U\"\n    },\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzA1Mzk4MjAsImV4cCI6MTczMDYyNjIyMCwiZW1haWwiOiJsZW9uYXJkb0BnbWFpbC5jb20ifQ.c-PliUqVOXskIAqZLiHgvMZ5j8F-iPPE7gnwla3MFnw\"\n}\n\n ```\n\n#### Uso del Token\n\nAl iniciar sesión con éxito, se generará un token de autenticación que es válido por **24 horas**. Este token debe ser incluido en las cabeceras de las solicitudes subsiguientes a la aplicación para acceder a los recursos protegidos.\n\nEs importante destacar que, hasta el momento, la única petición que no requiere este token es la de **agregar usuario**.\n\n---"
+			},
+			"response": []
+		}
+	]
+}

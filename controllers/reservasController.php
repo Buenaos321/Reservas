@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../services/reservaService.php';
+include_once __DIR__ . '/../services/reservasService.php';
 require_once __DIR__ . '/../config/authMiddleware.php';
 
 class ReservaController

@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../db.php';
+require_once 'config/database.php';
 
 class ReservaModel
 {
@@ -33,14 +33,35 @@ class ReservaModel
     // Crear una nueva reserva
     public function crearReserva($idSalon, $idUsuario, $fecha, $horaInicio, $horaFin): mixed
     {
+        // Verificar si existe una reserva con el mismo salón, fecha, hora de inicio y hora final
+        $verificarQuery = "SELECT COUNT(*) as total FROM reservas 
+                       WHERE IdSalon = :idSalon 
+                         AND Fecha = :fecha 
+                         AND HoraInicio = :horaInicio 
+                         AND HoraFin = :horaFin";
+        $verificarStmt = $this->db->prepare($verificarQuery);
+        $verificarStmt->bindParam(':idSalon', $idSalon);
+        $verificarStmt->bindParam(':fecha', $fecha);
+        $verificarStmt->bindParam(':horaInicio', $horaInicio);
+        $verificarStmt->bindParam(':horaFin', $horaFin);
+        $verificarStmt->execute();
+
+        $resultado = $verificarStmt->fetch(PDO::FETCH_ASSOC);
+
+        // Si ya existe una reserva con los mismos parámetros, no permitir la inserción
+        if ($resultado['total'] > 0) {
+            return null; // Retornar null o manejar el error según sea necesario
+        }
+
+        // Crear la nueva reserva si no hay conflicto
         $query = "INSERT INTO reservas (
             IdSalon, 
             IdUsuario, 
             Fecha, 
             HoraInicio, 
             HoraFin, 
-            Estado) 
-        VALUES (
+            Estado
+        ) VALUES (
             :idSalon, 
             :idUsuario, 
             :fecha, 

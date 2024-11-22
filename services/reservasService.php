@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../models/reservaModel.php';
+include_once __DIR__ . '/../models/reservasModel.php';
 
 class ReservaService {
     private $reservaModel;
@@ -12,7 +12,7 @@ class ReservaService {
     public function crearReservas($idSalon, $idUsuario, $fechaInicio, $fechaFin, $horaInicio, $horaFin): array {
         try {
             // Verificar que el salón existe antes de proceder
-            if (!$this->reservaModel->salonExiste($idSalon)) {
+            if (!$this->reservaModel->salonExiste(idSalon: $idSalon)) {
                 return [
                     'status' => 'error',
                     'message' => 'El salón especificado no existe.',
@@ -46,15 +46,7 @@ class ReservaService {
                     $horaFinStr = $horaFinIntervaloDT->format(format: 'H:i:s');
 
                     // Intentar crear la reserva para la fecha y hora actual
-                    $reservaId = $this->reservaModel->crearReserva($idSalon, $idUsuario, $fecha, $horaInicioStr, $horaFinStr);
-
-                    if (!$reservaId) {
-                        return [
-                            'status' => 'error',
-                            'message' => 'Error al crear la reserva para la fecha ' . $fecha . ' y hora ' . $horaInicioStr,
-                            'data' => null
-                        ];
-                    }
+                    $this->reservaModel->crearReserva(idSalon: $idSalon, idUsuario: $idUsuario, fecha: $fecha, horaInicio: $horaInicioStr, horaFin: $horaFinStr);
 
                     // Incrementar la hora actual por 1 hora
                     $horaInicioDT->modify(modifier: "+1 hour");
@@ -100,7 +92,7 @@ class ReservaService {
 
     public function actualizarReserva($idReserva, $estado): array {
         try {
-            $resultado = $this->reservaModel->actualizarReserva($idReserva, $estado);
+            $resultado = $this->reservaModel->actualizarReserva(idReserva: $idReserva, estado: $estado);
             if ($resultado) {
                 return [
                     'status' => 'success',
